@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
@@ -19,6 +21,7 @@ public class BallMechs extends SubsystemBase{
     private static CANSparkMax intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR, MotorType.kBrushed);
     //private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushed);
     private static CANSparkMax hopperMotor = new CANSparkMax(Constants.HOPPER_MOTOR, MotorType.kBrushed);
+    //public DoubleSolenoid ArmBringerUpperPnuematic = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
     //public Ultrasonic ballSensor_hopper = new Ultrasonic(3, 4);
     //double teamp = ballSensor_hopper.getRangeInches();
     public AnalogPotentiometer BallSensor = new AnalogPotentiometer(0);
@@ -35,8 +38,10 @@ public class BallMechs extends SubsystemBase{
     } */
     public void intake(double speed /*, boolean bumper */){
        // if (bumper){
+            // ArmBringerUpperPnuematic.set(Value.kForward);
+           // System.out.println(ArmBringerUpperPnuematic.get());
             intakeMotor.set(speed);
-            System.out.println("Motor is going");
+            //System.out.println("Motor is going");
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
       //  }
 			
@@ -45,7 +50,8 @@ public class BallMechs extends SubsystemBase{
      public void outake(double speed /* boolean bumper */)
 	{
        // if (bumper){
-
+           // ArmBringerUpperPnuematic.set(Value.kReverse);
+            //System.out.println(ArmBringerUpperPnuematic.get());
            intakeMotor.set(-speed);
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
       //  }
@@ -68,11 +74,11 @@ public class BallMechs extends SubsystemBase{
             //System.out.println(ballSensor_hopper.getRangeInches());
             //System.out.println("Ball is detected");
             //System.out.println(ballSensor_hopper.isEnabled());
-            System.out.println(BallSensor.get());
+           // System.out.println(BallSensor.get());
             hopperMotor.set(0);
       } else {
           hopperMotor.set(speed);
-          System.out.println("The intake is intaking" + ": " + BallSensor.get());
+          //System.out.println("The intake is intaking" + ": " + BallSensor.get());
         }
     }
     

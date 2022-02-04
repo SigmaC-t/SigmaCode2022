@@ -39,12 +39,16 @@ DifferentialDrive differentialDrive = null;
     left = new MotorControllerGroup(leftMaster, leftSlave, leftSlave2);
     right = new MotorControllerGroup(rightMaster, rightSlave, rightSlave2); 
 
+    left.setInverted(true);
+
     differentialDrive = new DifferentialDrive(left, right);
   }
+  
 
-  public void tankDrive (double moveSpeed, double rotateSpeed){
+  public void tankDrive (double left, double right){
 
-    differentialDrive.tankDrive(-moveSpeed, -rotateSpeed);
+   differentialDrive.tankDrive(-left, -right);
+  
   }
 
   @Override

@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.*;
 import frc.robot.commands.BallMech;
 import frc.robot.commands.DriveTank;
+import frc.robot.commands.Focus;
 import frc.robot.subsystems.BallMechs;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.SigmaSight;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.runShooter;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +31,7 @@ public class RobotContainer {
   public static Joystick driverController = new Joystick(Constants.DRIVER_CONTROLLER);
   public static final Drivetrain m_drivetrain = new Drivetrain();
   public static final BallMechs m_BallMechs = new BallMechs();
+  public static final SigmaSight m_SigmaSight = new SigmaSight();
   public static JoystickButton m_buttonA, m_buttonB, m_buttonX, m_buttonXRaw, m_buttonY, m_leftBumper, m_leftBumperReleased, m_rightBumper, m_leftStick, m_rightStick, o_buttonBReleased;
   public static double m_leftTrigger, m_leftAnalogX, m_rightAnalogX, m_leftAnalogY, m_rightAnalogY;
   JoystickButton m_rightTrigger;
@@ -43,14 +46,17 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     m_drivetrain.setDefaultCommand(new DriveTank());
+    m_BallMechs.setDefaultCommand(new StopIntake());
 
     //Intake Code
-    m_buttonX.whenPressed(new BallMech());
-    m_buttonX.whenReleased(new StopIntake());
+    m_rightBumper.whenPressed(new BallMech());
+    m_rightBumper.whenReleased(new StopIntake());
 
     //Outake Code
-    m_buttonY.whenPressed(new BallMech());
-    m_buttonY.whenReleased(new StopIntake());
+    m_leftBumper.whenPressed(new BallMech());
+    m_leftBumper.whenReleased(new StopIntake());
+
+    m_buttonB.whenHeld(new Focus());
 
     //m_buttonA.whenPressed(new runShooter());
     //m_buttonA.whenReleased(new StopIntake());
@@ -66,10 +72,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
         m_buttonA = new JoystickButton(driverController, XboxController.Button.kA.value);
         //m_buttonB = new JoystickButton(driverController, 2);
-        m_buttonX = new JoystickButton(mainController, XboxController.Button.kRightBumper.value);
-        m_buttonY = new JoystickButton(mainController, XboxController.Button.kLeftBumper.value);
-        m_rightTrigger = new JoystickButton(mainController, XboxController.Button.kB.value);
-        m_buttonB = new JoystickButton(mainController, XboxController.Button.kX.value); 
+        m_rightBumper = new JoystickButton(mainController, XboxController.Button.kRightBumper.value);
+        m_leftBumper = new JoystickButton(mainController, XboxController.Button.kLeftBumper.value);
+        m_buttonB = new JoystickButton(mainController, XboxController.Button.kB.value);
+        m_buttonX = new JoystickButton(mainController, XboxController.Button.kX.value); 
         /* 
         m_buttonX = mainController.getRawButtonPressed(3);
         m_buttonXRaw = mainController.getRawButton(3);
