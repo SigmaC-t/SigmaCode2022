@@ -35,5 +35,6 @@ public final class Constants {
     //Limelight Constants
     public static final double TURN_KP = -0.03;
     public static final double MIN_AIM_COMMAND = -.1;
+    public static final double DISTANCE_KP = 0.1;
 
 }

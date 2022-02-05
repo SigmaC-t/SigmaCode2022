@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.*;
 import frc.robot.commands.BallMech;
 import frc.robot.commands.DriveTank;
+import frc.robot.commands.DriveToRange;
 import frc.robot.commands.Focus;
 import frc.robot.subsystems.BallMechs;
 import frc.robot.subsystems.Drivetrain;
@@ -57,6 +58,8 @@ public class RobotContainer {
     m_leftBumper.whenReleased(new StopIntake());
 
     m_buttonB.whenHeld(new Focus());
+    
+    m_buttonA.whenHeld(new DriveToRange());
 
     //m_buttonA.whenPressed(new runShooter());
     //m_buttonA.whenReleased(new StopIntake());
