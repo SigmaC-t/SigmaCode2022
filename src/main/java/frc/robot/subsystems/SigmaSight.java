@@ -19,8 +19,9 @@ public class SigmaSight extends SubsystemBase {
   public double distance_adjust;
   public double left_command;
   public double right_command;
-  public double turnKp = Constants.TURN_KP;
-  public double distanceKp, desiredArea;
+  public double turnKp = Constants.TURN_KP; //KPAIM
+  public double distanceKP = Constants.DISTANCE_KP;
+  public double desiredArea;
   public double minAimCommand = Constants.MIN_AIM_COMMAND;
 
   NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
@@ -51,8 +52,8 @@ public class SigmaSight extends SubsystemBase {
 
   public void Focus(Drivetrain drivetrain){
     double heading_error = -xVal;
-    steering_adjust = 0;
-
+    double steering_adjust = 0;
+    
     if (xVal > 1.0){
       steering_adjust = turnKp * heading_error - minAimCommand;
 
@@ -62,18 +63,39 @@ public class SigmaSight extends SubsystemBase {
     }
 
     left_command -= steering_adjust;
-    right_command += steering_adjust;
-    
+    right_command +=  steering_adjust;
+
+
     drivetrain.tankDrive(left_command, right_command);
     System.out.println("Adjusting Aim");
     System.out.println("tx: " + xVal);
+    System.out.println("ty: " + yVal);
     System.out.println("Left Command: " + left_command);
     System.out.println("Right Command: " + right_command);
+
   }
+
+  public void getInRange(Drivetrain drivetrain){
+        double distance_error = -yVal;
+        distance_adjust = distanceKP * distance_error;
+
+        left_command += distance_adjust;
+        right_command += distance_adjust;
+
+        drivetrain.tankDrive(left_command, right_command);
+
+        System.out.println("Driving to optimal distance");
+        System.out.println("Distance error: " + distance_error);
+        System.out.println("Distance adjust: " + distance_adjust);
+        System.out.println("Left Command: " + left_command);
+        System.out.println("Right CommandL " + right_command);
+        
+}
+  
   /** Creates a new SigmaSight. */
   public SigmaSight() {}
 
-  @Override
+  @Override 
   public void periodic() {
     // This method will be called once per scheduler run
   }
