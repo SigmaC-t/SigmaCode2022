@@ -9,9 +9,13 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.BallMech;
+import frc.robot.commands.BasicAuto;
+import frc.robot.commands.Drivestraight;
 import frc.robot.commands.StopIntake;
 import frc.robot.subsystems.BallMechs;
+import com.revrobotics.RelativeEncoder;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,6 +25,7 @@ import frc.robot.subsystems.BallMechs;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+
 
   private RobotContainer m_robotContainer;
   /**
@@ -32,6 +37,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    RobotContainer.m_BallMechs.counterBot.setUpSource(9);
+    RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
+    
 
   }
 
@@ -48,6 +56,8 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    RobotContainer.m_SigmaSight.updateValues();
+    RobotContainer.m_BallMechs.BallSensor.get();
     CommandScheduler.getInstance().run();
   }
 
@@ -62,15 +72,27 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    // schedule the autonomous command (example)
+    m_autonomousCommand =  new BasicAuto();
+
+    // schedule the autonomous command (exampl'e)
     if (m_autonomousCommand != null) {
+      System.out.println("Autonomous Schedule");
       m_autonomousCommand.schedule();
     }
   }
 
   /** This function is called periodically during autonomous. */
+  int Counter = 0;
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+      /* RobotContainer.m_drivetrain.auto();
+
+      if (Counter > 250){
+        RobotContainer.m_drivetrain.tankDrive(0, 0);
+      }
+        */
+  }
 
   @Override
   public void teleopInit() {
@@ -88,7 +110,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    RobotContainer.m_SigmaSight.updateValues();
+    //RobotContainer.m_SigmaSight.updateValues();
     //System.out.println(RobotContainer.m_BallMechs.ArmBringerUpperPnuematic.get());
     //System.out.println(RobotContainer.m_BallMechs.ballSensor_hopper.getRangeInches());
     //System.out.println(RobotContainer.m_BallMechs.BallSensor.get());
@@ -103,4 +125,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  
+
+  
 }

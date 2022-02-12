@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
 
 public class SigmaSight extends SubsystemBase {
 
@@ -30,7 +31,9 @@ public class SigmaSight extends SubsystemBase {
   NetworkTableEntry ty = limelightTable.getEntry("ty");
   NetworkTableEntry ta = limelightTable.getEntry("ta");
   NetworkTableEntry ts = limelightTable.getEntry("ts");
+  
 
+  //Updates value and reflect updated values in SmartDashboard
   public void updateValues(){
     validTarget = isValidTarget();
     xVal = tx.getDouble(0.0);
@@ -44,16 +47,18 @@ public class SigmaSight extends SubsystemBase {
     SmartDashboard.putNumber("ta", area);
     SmartDashboard.putNumber("ts", skew);
   }
-   
+
+
+  //Returns boolean value if limelight sees a target.
   public boolean isValidTarget(){
     return ! (xVal == 0.0 && yVal == 0.0);
 
   }
 
+  //Focus centers the crosshair of the Limelight to the middle of the vision target.
   public void Focus(Drivetrain drivetrain){
     double heading_error = -xVal;
     double steering_adjust = 0;
-    
     if (xVal > 1.0){
       steering_adjust = turnKp * heading_error - minAimCommand;
 
@@ -74,10 +79,55 @@ public class SigmaSight extends SubsystemBase {
     System.out.println("Right Command: " + right_command);
 
   }
+  
 
+  public boolean lineUpToShoot(Drivetrain drivetrain)
+    {
+      int counter = 0;
+        //double minAimCommand = 0.07;
+        steering_adjust = turnKp * xVal;
+        if(xVal > 0)
+        {
+            drivetrain.tankDrive(steering_adjust - minAimCommand, -steering_adjust + minAimCommand);
+        }
+        else if(xVal < 0)
+        {
+            drivetrain.tankDrive(steering_adjust + minAimCommand, -steering_adjust - minAimCommand);
+        }
+        if(Math.abs(xVal) < 2)
+        {
+            counter++;
+        }
+        return counter > 100;
+    }
+
+    public boolean aimAndRange(Drivetrain drivetrain)
+    {
+        if (xVal > 1.0)
+        {
+            steering_adjust = turnKp * -xVal - minAimCommand;
+        }
+        else if (xVal < 1.0)
+        {
+            steering_adjust = turnKp * -xVal + minAimCommand;
+        }
+
+        distance_adjust = distanceKP * (desiredArea - area);
+
+        left_command = steering_adjust + distance_adjust * -1;
+        right_command = -steering_adjust + distance_adjust * -1;
+
+        System.out.println("leftSpeed: " + left_command);
+        drivetrain.tankDrive(left_command, right_command);
+        System.out.println("It is working");
+        return (area > desiredArea - 0.5 && area < desiredArea + 0.5 && xVal > -1.2 && xVal < 1.2);
+        
+    }
+
+  
   public void getInRange(Drivetrain drivetrain){
         double distance_error = -yVal;
-        distance_adjust = distanceKP * distance_error;
+        distance_adjust = distanceKP * distance_error; //(desiredArea - area);
 
         left_command += distance_adjust;
         right_command += distance_adjust;

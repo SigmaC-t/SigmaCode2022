@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CAN;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -21,10 +22,12 @@ public class BallMechs extends SubsystemBase{
     private static CANSparkMax intakeMotor = new CANSparkMax(Constants.INTAKE_MOTOR, MotorType.kBrushed);
     //private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushed);
     private static CANSparkMax hopperMotor = new CANSparkMax(Constants.HOPPER_MOTOR, MotorType.kBrushed);
-    //public DoubleSolenoid ArmBringerUpperPnuematic = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+     public DoubleSolenoid ArmBringerUpper = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
     //public Ultrasonic ballSensor_hopper = new Ultrasonic(3, 4);
-    //double teamp = ballSensor_hopper.getRangeInches();
-    public AnalogPotentiometer BallSensor = new AnalogPotentiometer(0);
+    public AnalogPotentiometer BallSensor = new AnalogPotentiometer(1);
+    public Counter counterBot = new Counter(Counter.Mode.kSemiperiod);
+    public Counter counterMid = new Counter(Counter.Mode.kSemiperiod);
+    public Counter counterTop = new Counter(Counter.Mode.kSemiperiod);
 
     public void BallMech()
 	{
@@ -36,23 +39,46 @@ public class BallMechs extends SubsystemBase{
         shooterMotor.set(speed);
         RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
     } */
-    public void intake(double speed /*, boolean bumper */){
-       // if (bumper){
-            // ArmBringerUpperPnuematic.set(Value.kForward);
-           // System.out.println(ArmBringerUpperPnuematic.get());
+    public void intake (double speed, boolean extend){
+           
+            extendIntake(extend);
+
+            if (RobotContainer.m_rightBumper.get()){
+
+                System.out.println(ArmBringerUpper.get());
+                //BallSensor.get();
+                System.out.println(counterBot.getPeriod());
+
+
+            }
+
             intakeMotor.set(speed);
-            //System.out.println("Motor is going");
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-      //  }
-			
+
     }
+
+       public void extendIntake(boolean extend){
+           if (extend){
+
+            ArmBringerUpper.set(Value.kReverse);
+            System.out.println("It's extended");
+
+           } else {
+               
+            ArmBringerUpper.set(Value.kForward);
+            System.out.println("It's not extended");
+
+           }
+       }
+
+      //  }
     
      public void outake(double speed /* boolean bumper */)
 	{
        // if (bumper){
-           // ArmBringerUpperPnuematic.set(Value.kReverse);
-            //System.out.println(ArmBringerUpperPnuematic.get());
-           intakeMotor.set(-speed);
+            //ArmBringerUpper.set(Value.kReverse);
+            System.out.println(ArmBringerUpper.get());
+            intakeMotor.set(-speed);
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
       //  }
 		
@@ -81,5 +107,36 @@ public class BallMechs extends SubsystemBase{
           //System.out.println("The intake is intaking" + ": " + BallSensor.get());
         }
     }
-    
+
+
+    public void Balls(){
+    int ballState = 0;
+    switch (ballState){
+
+        case 0:
+        hopperMotor.set(.35);
+        ballState = 1;
+
+        case 1:
+        if (counterMid.getPeriod() > 0)
+        {
+            hopperMotor.set(0);
+            ballState = 2;
+        }
+
+        case 2:
+        if (counterBot.getPeriod() > 0 && counterMid.getPeriod() > 0){
+            hopperMotor.set(.35);
+            ballState = 3;
+        }
+
+        case 3: 
+        if(counterTop.getPeriod() > 0){
+            hopperMotor.set(0);
+        }
+
+        case 4: 
+        hopperMotor.set(.5);
+    }
+    }
 }
