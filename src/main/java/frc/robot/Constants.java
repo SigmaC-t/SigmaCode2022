@@ -23,9 +23,12 @@ public final class Constants {
     public static final int DRIVETRAIN_RIGHT_SLAVE2 = 3;
 
     //MISC motors
-    public static final int INTAKE_MOTOR = 7;
+    public static final int INTAKE_MOTOR_FRONT = 7;
+    public static final int INTAKE_MOTOR_BACK = 8;;
     // public static final int SHOOTER_MOTOR = 9;
-    public static final int HOPPER_MOTOR = 9;
+    public static final int HOPPER_MOTOR_ONE = 9;
+    public static final int HOPPER_MOTOR_TWO = 10;
+
 
     //Controller Inputs
     public static final int DRIVER_CONTROLLER = 0;
@@ -35,6 +38,7 @@ public final class Constants {
     //Limelight Constants
     public static final double TURN_KP = -0.03;
     public static final double MIN_AIM_COMMAND = -.1;
-    public static final double DISTANCE_KP = 0.1;
+    public static final double DISTANCE_KP = -0.1;
+    
 
 }

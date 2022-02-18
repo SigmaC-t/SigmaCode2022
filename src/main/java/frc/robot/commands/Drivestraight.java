@@ -4,16 +4,13 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.BallMechs;
 
-public class StopIntake extends CommandBase {
-  /** Creates a new StopIntake. */
-  public StopIntake() {
-    addRequirements(RobotContainer.m_BallMechs);
-
+public class Drivestraight extends CommandBase {
+  /** Creates a new Drivestraight. */
+  public Drivestraight() {
+    addRequirements(RobotContainer.m_drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -22,13 +19,20 @@ public class StopIntake extends CommandBase {
   public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
+  int Counter = 0;
   @Override
-  public void execute( ) { 
-    double speed = 0;
-    RobotContainer.m_BallMechs.intake(speed, false);
-    RobotContainer.m_BallMechs.shooter(speed);
-    RobotContainer.m_BallMechs.hopper(speed);
+  public void execute() {
+    System.out.println("Please work");
+    RobotContainer.m_drivetrain.auto();
+    Counter++;
+
+    /*if (Counter > 50){
+      RobotContainer.m_drivetrain.tankDrive(0, 0);
+    }
+    Counter++;
+    */
   }
+  
 
   // Called once the command ends or is interrupted.
   @Override
@@ -37,6 +41,15 @@ public class StopIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (Counter > 100){
+      
+      System.out.println("DriveStraight is finished");
+      return true;
+
+    } else {
+
+      return false;
+
+    }
   }
 }

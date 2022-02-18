@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.commands.BallMech;
 import frc.robot.commands.BasicAuto;
 import frc.robot.commands.Drivestraight;
@@ -37,8 +38,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    RobotContainer.m_BallMechs.counterBot.setUpSource(9);
-    RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
+    //RobotContainer.m_BallMechs.counterBot.setUpSource(0);
+    //RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
+    
     
 
   }
@@ -57,8 +59,11 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     RobotContainer.m_SigmaSight.updateValues();
-    RobotContainer.m_BallMechs.BallSensor.get();
+    //RobotContainer.m_BallMechs.BallSensor.get();
     CommandScheduler.getInstance().run();
+    //RobotContainer.navX.updateAHRS();
+    //RobotContainer.navX.update();
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -73,6 +78,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     m_autonomousCommand =  new BasicAuto();
+   // RobotContainer.navX.resetAngle();
 
     // schedule the autonomous command (exampl'e)
     if (m_autonomousCommand != null) {
@@ -102,6 +108,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    //RobotContainer.navX.resetAngle();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -110,10 +117,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    //System.out.println(RobotContainer.m_BallMechs.sensorBot.get());
     //RobotContainer.m_SigmaSight.updateValues();
-    //System.out.println(RobotContainer.m_BallMechs.ArmBringerUpperPnuematic.get());
-    //System.out.println(RobotContainer.m_BallMechs.ballSensor_hopper.getRangeInches());
-    //System.out.println(RobotContainer.m_BallMechs.BallSensor.get());
+    //System.out.println(RobotContainer.m_BallMechs.sensorBot.get());
+   
     }
 
   @Override

@@ -20,6 +20,7 @@ import frc.robot.commands.StopIntake;
 import frc.robot.commands.runShooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.subsystems.NavX;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,6 +41,7 @@ public class RobotContainer {
   public static double o_leftTrigger, o_rightTrigger, o_leftAnalogX, o_rightAnalogX, o_leftAnalogY, o_rightAnalogY;
   public static XboxController mainController = new XboxController(0);
   public static XboxController operatorController = new XboxController(1);
+  public static NavX navX = new NavX();
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -58,8 +60,9 @@ public class RobotContainer {
     m_leftBumper.whenReleased(new StopIntake());
 
     m_buttonB.whenHeld(new Focus());
-    
+
     m_buttonA.whenHeld(new DriveToRange());
+
 
     //m_buttonA.whenPressed(new runShooter());
     //m_buttonA.whenReleased(new StopIntake());
