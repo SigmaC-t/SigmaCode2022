@@ -11,7 +11,7 @@ import frc.robot.RobotContainer;
 
 public class runShooter extends CommandBase {
   /** Creates a new runShooter. */
-  /*public runShooter() {
+  public runShooter() {
     addRequirements(RobotContainer.m_BallMechs);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,7 +23,10 @@ public class runShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = .9;
+    //\
+
+    
+    double speed = .8;
     RobotContainer.m_BallMechs.shooter(-speed);
     
 
@@ -40,5 +43,5 @@ public class runShooter extends CommandBase {
   public boolean isFinished() {
     return false;
   }
-  */
+  
 }
