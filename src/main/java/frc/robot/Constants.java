@@ -44,5 +44,5 @@ public final class Constants {
     public static final int SHOOTER_MOTOR = 9;
     public static final int SHOOTER_MOTOR_TWO = 10;
     
-
+    //Two Climber Motors
 }

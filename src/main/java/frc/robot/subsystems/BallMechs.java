@@ -23,12 +23,13 @@ public class BallMechs extends SubsystemBase{
     private static CANSparkMax intakeMotorF = new CANSparkMax(Constants.INTAKE_MOTOR_FRONT, MotorType.kBrushed);
     private static CANSparkMax intakeMotorB = new CANSparkMax(Constants.INTAKE_MOTOR_BACK, MotorType.kBrushed);
 
-    private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushless);
-    private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushless);
+    //Currently being used to run a 775
+    //private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushed); //Change kBrushed back to kBrushless after testing
+    private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushed);
 
     //Initialization of Hopper Motors
-    private static CANSparkMax hopperMotor = new CANSparkMax(Constants.HOPPER_MOTOR_ONE, MotorType.kBrushed);
-    private static CANSparkMax hopperMotor2 = new CANSparkMax(Constants.HOPPER_MOTOR_TWO, MotorType.kBrushed);
+    public static CANSparkMax hopperMotor = new CANSparkMax(Constants.HOPPER_MOTOR_ONE, MotorType.kBrushed);
+    // private static CANSparkMax hopperMotor2 = new CANSparkMax(Constants.HOPPER_MOTOR_TWO, MotorType.kBrushed);
 
     //Initialization of Cylinders
      public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
@@ -44,8 +45,8 @@ public class BallMechs extends SubsystemBase{
     //Digital Input class used to get a simple boolean value from the IR sensors.
     //returns false if it sees something, returns true otherwise. 
     public DigitalInput sensorBot = new DigitalInput(0);
-    public DigitalInput sensorMid = new DigitalInput(1);
-    public DigitalInput sensorTop = new DigitalInput(2);
+    public DigitalInput sensorTop = new DigitalInput(1);
+    //public DigitalInput sensorTop = new DigitalInput(2);
     //public Counter counterMid = new Counter(Counter.Mode.kSemiperiod);
     //public Counter counterTop = new Counter(Counter.Mode.kSemiperiod);
 
@@ -131,7 +132,8 @@ public class BallMechs extends SubsystemBase{
   //  }
 
     public void shooter (double speed){
-         shooterMotor.set(speed);
+        //Currently being used to run a 775;
+         //shooterMotor.set(speed);
          shooterMotorTwo.set(-speed);
         
     }
@@ -154,6 +156,8 @@ public class BallMechs extends SubsystemBase{
     //Make intake run independetly from able to run intake independently from hopper.
 
 
+//change of plans, when bottom sensor gets the bll, slowly move towards the top sensor then stop
+
     //Determines the position of the balls and acts accordingly
     // [0, 0 ,0] = No balls, intake as normal.
     // [1, 0, 0] = One ball in intake area, move upwards
@@ -162,14 +166,19 @@ public class BallMechs extends SubsystemBase{
     // [0, 0, 1] = One ball at top, stop intake, allow for shooting.
     int counter = 0; 
     int ballState = 0;
-   public void Balls(){
+
+    public void runHopper(double speed){
+        hopperMotor.set(speed);
+    }
+
+   public boolean Balls(){
     //int ballState = 0;
     switch (ballState){
 
         case 0:
         System.out.println("First Stage");
         if (!sensorBot.get()){
-            hopperMotor.set(.35);
+            hopperMotor.set(.1);
             ballState = 1;
             
         }
@@ -178,14 +187,35 @@ public class BallMechs extends SubsystemBase{
 
         case 1:
         //!sensorBot means ball is present. Inverts the DigitalInput output and turns false to true. 
-        if (!sensorMid.get())
+        System.out.println("Second Stage");
+        if (!sensorTop.get())
         {
-            System.out.println("Second stage");
+            System.out.println("Ready to Shoot");
             hopperMotor.set(0);
             ballState = 2;
+            return true;
         }
         break;
 
+        //Testing code below
+
+        case 2: 
+        System.out.println("Clean-up Stage");
+        hopperMotor.set(1);
+        //delay
+        if (!sensorTop.get() == false){
+
+
+
+        }
+
+
+        
+    }
+
+
+    return false;
+        /*
         case 2:
         System.out.println("Third Stage");
         if (!sensorBot.get() && !sensorMid.get()){
@@ -207,6 +237,6 @@ public class BallMechs extends SubsystemBase{
         //hopperMotor.set(.5);
         break;
     }
+    */
     }
-    
 }
