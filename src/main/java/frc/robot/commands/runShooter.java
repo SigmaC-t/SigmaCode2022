@@ -10,6 +10,7 @@ import frc.robot.subsystems.BallMechs;
 import frc.robot.RobotContainer;
 
 public class runShooter extends CommandBase {
+  double speed = 0;
   /** Creates a new runShooter. */
   public runShooter() {
     addRequirements(RobotContainer.m_BallMechs);
@@ -18,16 +19,41 @@ public class runShooter extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //\
 
-    
-    double speed = .8;
-    RobotContainer.m_BallMechs.shooter(-speed);
+    //System.out.println("Running Shooter");
+
+    //\
+    //speed .8 is ideal for shooting in the top hub. 
+    /*
+    if (RobotContainer.driverController.getRawAxis(3) > .05){
+       speed = -RobotContainer.driverController.getRawAxis(3);
+       System.out.println("The negative");
+
+    }
+
+    if (RobotContainer.driverController.getRawAxis(2) > .05){
+      speed = RobotContainer.driverController.getRawAxis(2);
+      System.out.println("The positive");
+    }
+    */
+
+    //Make sure all balls are out by detecting top sensor changing values. 
+    //Once top sensor has changed value X amount of times, stop motors
+
+    if (RobotContainer.m_BallMechs.Balls()){
+      System.out.println("Shooting");
+      double speed = .8;
+      BallMechs.hopperMotor.set(.9);
+      RobotContainer.m_BallMechs.shooter(-speed);
+    }
+   
     
 
   }

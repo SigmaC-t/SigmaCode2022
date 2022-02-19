@@ -8,7 +8,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Follower extends SubsystemBase {
   /** Creates a new Follower. */
-  public Follower() {}
+  public Follower() {
+
+
+  }
+
+  public void generateTrajectory(){
+    
+  }
 
   @Override
   public void periodic() {

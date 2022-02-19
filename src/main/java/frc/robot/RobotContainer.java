@@ -17,6 +17,8 @@ import frc.robot.subsystems.BallMechs;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.SigmaSight;
 import frc.robot.commands.StopIntake;
+import frc.robot.commands.runHopper;
+import frc.robot.commands.runIntake;
 import frc.robot.commands.runShooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -52,11 +54,15 @@ public class RobotContainer {
     m_BallMechs.setDefaultCommand(new StopIntake());
 
     //Intake Code
-    m_rightBumper.whenPressed(new BallMech());
+    m_rightBumper.whenPressed(new runIntake());
     m_rightBumper.whenReleased(new StopIntake());
 
     //Outake Code
-    m_leftBumper.whenPressed(new BallMech());
+   // m_leftBumper.whenPressed(new BallMech());
+   // m_leftBumper.whenReleased(new StopIntake());
+
+    //Hopper Code
+    m_leftBumper.whenPressed(new runHopper());
     m_leftBumper.whenReleased(new StopIntake());
 
     m_buttonB.whenHeld(new Focus());
