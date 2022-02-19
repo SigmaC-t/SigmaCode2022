@@ -64,8 +64,8 @@ public class RobotContainer {
     m_buttonA.whenHeld(new DriveToRange());
 
 
-    //m_buttonA.whenPressed(new runShooter());
-    //m_buttonA.whenReleased(new StopIntake());
+    m_buttonX.whenPressed(new runShooter());
+    m_buttonX.whenReleased(new StopIntake());
     
   }
 

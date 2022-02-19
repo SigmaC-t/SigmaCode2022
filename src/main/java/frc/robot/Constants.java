@@ -26,8 +26,8 @@ public final class Constants {
     public static final int INTAKE_MOTOR_FRONT = 7;
     public static final int INTAKE_MOTOR_BACK = 8;;
     // public static final int SHOOTER_MOTOR = 9;
-    public static final int HOPPER_MOTOR_ONE = 9;
-    public static final int HOPPER_MOTOR_TWO = 10;
+    public static final int HOPPER_MOTOR_ONE = 11;
+    public static final int HOPPER_MOTOR_TWO = 12;
 
 
     //Controller Inputs
@@ -39,6 +39,10 @@ public final class Constants {
     public static final double TURN_KP = -0.03;
     public static final double MIN_AIM_COMMAND = -.1;
     public static final double DISTANCE_KP = -0.1;
+
+
+    public static final int SHOOTER_MOTOR = 9;
+    public static final int SHOOTER_MOTOR_TWO = 10;
     
 
 }
