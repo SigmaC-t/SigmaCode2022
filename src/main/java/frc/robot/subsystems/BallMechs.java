@@ -197,16 +197,15 @@ public class BallMechs extends SubsystemBase{
         }
         break;
 
-        //Testing code below
+        //Testing code below, may not be necessary
 
         case 2: 
         System.out.println("Clean-up Stage");
         hopperMotor.set(1);
         //delay
-        if (!sensorTop.get() == false){
-
-
-
+        if (!sensorTop.get() == false && !sensorBot.get() == false){
+            ballState = 0;
+            //Ensure that all balls are out before going back to 0.
         }
 
 

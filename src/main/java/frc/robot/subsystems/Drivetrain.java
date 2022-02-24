@@ -95,6 +95,7 @@ double averageEncoderPosition; */
   }
 
   //Currently gets Neo 550 integrated encoders. When we get robot, change to SRX Mag Encoders using Alternative Encoder
+  //Change to Encoder and install encoders into roborio. 
  /*RelativeEncoder m_leftEncoder = leftMaster.getEncoder();
  RelativeEncoder m_rightEncoder = rightMaster.getEncoder();
 
