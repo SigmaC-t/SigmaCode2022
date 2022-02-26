@@ -7,10 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class runIntake extends CommandBase {
-  /** Creates a new runIntake. */
-  public runIntake() {
-    addRequirements(RobotContainer.m_BallMechs);
+public class runIntakeB extends CommandBase {
+  /** Creates a new runIntakeB. */
+  public runIntakeB() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -21,18 +20,17 @@ public class runIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     double speed = .5;
-    RobotContainer.m_BallMechs.intake(speed, true);
+    RobotContainer.m_BallMechs.intakeTwo(speed, true);
     System.out.println("Intake is working");
+
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    RobotContainer.m_BallMechs.intake(0, false);
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

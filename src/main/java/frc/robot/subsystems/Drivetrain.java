@@ -4,11 +4,17 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
+import com.kauailabs.navx.*;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.lang.Math.*;
 
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
@@ -17,7 +23,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -29,6 +40,9 @@ public CANSparkMax rightMaster = null;
 public CANSparkMax rightSlave = null;
 public CANSparkMax rightSlave2 = null;
 
+public Gyro m_gyro = new AHRS(SPI.Port.kMXP); 
+
+public DifferentialDriveOdometry m_odometry;
 
 
 //MotorControllerGroup initial initiablization
@@ -47,10 +61,10 @@ private double desiredPosition;
 private double currentAngle;
 private double distance_adjust;
 
-/*private RelativeEncoder m_rightEncoder = rightMaster.getEncoder();
-private RelativeEncoder m_leftEncoder = leftMaster.getEncoder();
+private RelativeEncoder m_rightEncoder = rightMaster.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 4096);
+private RelativeEncoder m_leftEncoder = leftMaster.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 4096);
 
-double averageEncoderPosition; */
+double averageEncoderPosition;
 
 
 
@@ -76,6 +90,9 @@ double averageEncoderPosition; */
     //Instantiated Differential Drive that manipulates the MotorGroups (Left and Right side of robot)
     differentialDrive = new DifferentialDrive(left, right);
 
+    //resetEncoders();
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+
 
 
   }
@@ -90,10 +107,63 @@ double averageEncoderPosition; */
 
   @Override
   public void periodic() {
+    //m_odometry.update(
+    //m_gyro.getRotation2D(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
 
     // This method will be called once per scheduler run
   }
 
+  public Pose2d getPose(){
+    return m_odometry.getPoseMeters();
+  }
+
+  /* public DifferentialDriveWheelSpeeds getWheelSpeeds(){
+    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+    m_leftEncoder.getVelocity()
+  }
+
+  public void resetOdometry(Pose2d pose){
+    resetEncoders();
+    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+  }
+
+  public void resetEncoders(){
+    m_leftEncoder.reset();
+    m_rightEncoder.reset();
+  }
+
+  public void tankDriveVolts (double leftVolts, double rightVolts){
+    left.setVoltage(leftVolts);
+    right.setVoltage(rightVolts);
+    differentialDrive.feed();
+  }
+
+  public double getAverageEncoderDistance(){
+    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance() / 2.0);
+
+  }
+
+  public Encoder getLeftEncoder(){
+    return m_leftEncoder;
+  }
+
+  public Encoder getRightEncoder(){
+    return m_rightEncoder;
+  }
+
+  public void setMaxOutpet(double maxOutput){
+    differentialDrive.setMaxOutput(maxOutput);
+  }
+
+  public void zeroHeading(){
+    m_gyro.reset();
+  }
+
+  public double getTurnRate(){
+    return m_gyro.getRate();
+  }
+
+  */
   //Currently gets Neo 550 integrated encoders. When we get robot, change to SRX Mag Encoders using Alternative Encoder
   //Change to Encoder and install encoders into roborio. 
  /*RelativeEncoder m_leftEncoder = leftMaster.getEncoder();

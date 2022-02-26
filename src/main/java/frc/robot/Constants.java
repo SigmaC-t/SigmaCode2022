@@ -24,12 +24,15 @@ public final class Constants {
     public static final int DRIVETRAIN_RIGHT_SLAVE = 2;
     public static final int DRIVETRAIN_RIGHT_SLAVE2 = 3;
 
-    //MISC motors
+    //Ball Mechanism Motors (Intake & Hopper)
     public static final int INTAKE_MOTOR_FRONT = 7;
-    public static final int INTAKE_MOTOR_BACK = 8;;
-    // public static final int SHOOTER_MOTOR = 9;
+    public static final int INTAKE_MOTOR_BACK = 8;
     public static final int HOPPER_MOTOR_ONE = 11;
     public static final int HOPPER_MOTOR_TWO = 12;
+
+    //Shooter Motors
+    public static final int SHOOTER_MOTOR = 9;
+    public static final int SHOOTER_MOTOR_TWO = 10;
 
 
     //Controller Inputs
@@ -42,9 +45,7 @@ public final class Constants {
     public static final double MIN_AIM_COMMAND = -.1;
     public static final double DISTANCE_KP = -0.1;
 
-
-    public static final int SHOOTER_MOTOR = 9;
-    public static final int SHOOTER_MOTOR_TWO = 10;
+  
     
     //Two Climber Motors
 

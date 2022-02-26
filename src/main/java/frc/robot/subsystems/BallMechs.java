@@ -23,9 +23,8 @@ public class BallMechs extends SubsystemBase{
     private static CANSparkMax intakeMotorF = new CANSparkMax(Constants.INTAKE_MOTOR_FRONT, MotorType.kBrushed);
     private static CANSparkMax intakeMotorB = new CANSparkMax(Constants.INTAKE_MOTOR_BACK, MotorType.kBrushed);
 
-    //Currently being used to run a 775
-    //private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushed); //Change kBrushed back to kBrushless after testing
-    private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushed);
+    private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushless); //Change kBrushed back to kBrushless after testing
+    private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushless);
 
     //Initialization of Hopper Motors
     public static CANSparkMax hopperMotor = new CANSparkMax(Constants.HOPPER_MOTOR_ONE, MotorType.kBrushed);
@@ -132,8 +131,7 @@ public class BallMechs extends SubsystemBase{
   //  }
 
     public void shooter (double speed){
-        //Currently being used to run a 775;
-         //shooterMotor.set(speed);
+         shooterMotor.set(speed);
          shooterMotorTwo.set(-speed);
         
     }
