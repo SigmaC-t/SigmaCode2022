@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.*;
 import frc.robot.commands.BallMech;
 import frc.robot.commands.DriveTank;
@@ -18,7 +19,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.SigmaSight;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.runHopper;
-import frc.robot.commands.runIntake;
+import frc.robot.commands.runIntakeB;
+import frc.robot.commands.runIntakeF;
 import frc.robot.commands.runShooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -38,7 +40,7 @@ public class RobotContainer {
   public static final SigmaSight m_SigmaSight = new SigmaSight();
   public static JoystickButton m_buttonA, m_buttonB, m_buttonX, m_buttonXRaw, m_buttonY, m_leftBumper, m_leftBumperReleased, m_rightBumper, m_leftStick, m_rightStick, o_buttonBReleased;
   public static double m_leftTrigger, m_leftAnalogX, m_rightAnalogX, m_leftAnalogY, m_rightAnalogY;
-  JoystickButton m_rightTrigger;
+  double m_rightTrigger;
   public static Button o_buttonA, o_buttonB, o_buttonX, o_buttonXReleased, o_buttonY, o_leftBumper, o_rightBumper, o_leftStick, o_rightStick;
   public static double o_leftTrigger, o_rightTrigger, o_leftAnalogX, o_rightAnalogX, o_leftAnalogY, o_rightAnalogY;
   public static XboxController mainController = new XboxController(0);
@@ -54,20 +56,30 @@ public class RobotContainer {
     m_BallMechs.setDefaultCommand(new StopIntake());
 
     //Intake Code
-    m_rightBumper.whenPressed(new runIntake());
+    m_rightBumper.whenPressed(new runIntakeF());
     m_rightBumper.whenReleased(new StopIntake());
+
+    m_leftBumper.whenPressed(new runIntakeB());
+    m_leftBumper.whenReleased(new StopIntake());
 
     //Outake Code
    // m_leftBumper.whenPressed(new BallMech());
    // m_leftBumper.whenReleased(new StopIntake());
 
     //Hopper Code
-    m_leftBumper.whenPressed(new runHopper());
-    m_leftBumper.whenReleased(new StopIntake());
+    //m_buttonX.whenPressed(new runHopper());
+    //m_buttonX.whenReleased(new StopIntake());
 
     m_buttonB.whenHeld(new Focus());
 
-    m_buttonA.whenHeld(new DriveToRange());
+    //
+    if (driverController.getRawAxis(2) > 0.5){
+
+      new runIntakeB();
+
+    }
+
+    //m_buttonA.whenHeld(new DriveToRange());
 
 
     m_buttonX.whenPressed(new runShooter());
@@ -87,7 +99,9 @@ public class RobotContainer {
         m_rightBumper = new JoystickButton(mainController, XboxController.Button.kRightBumper.value);
         m_leftBumper = new JoystickButton(mainController, XboxController.Button.kLeftBumper.value);
         m_buttonB = new JoystickButton(mainController, XboxController.Button.kB.value);
-        m_buttonX = new JoystickButton(mainController, XboxController.Button.kX.value); 
+        m_buttonX = new JoystickButton(mainController, XboxController.Button.kX.value);
+        m_leftTrigger = driverController.getRawAxis(2);
+        m_rightTrigger = driverController.getRawAxis(3);
         /* 
         m_buttonX = mainController.getRawButtonPressed(3);
         m_buttonXRaw = mainController.getRawButton(3);
