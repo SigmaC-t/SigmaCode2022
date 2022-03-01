@@ -8,9 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
 public class runHopper extends CommandBase {
+  private double speed;
+  
   /** Creates a new runHopper. */
-  public runHopper() {
+  public runHopper(double x) {
     addRequirements(RobotContainer.m_BallMechs);
+    speed = x;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -22,7 +25,6 @@ public class runHopper extends CommandBase {
   @Override
   public void execute() {
 
-    double speed = .5;
     RobotContainer.m_BallMechs.runHopper(speed);
     System.out.println("running Hopper");
 

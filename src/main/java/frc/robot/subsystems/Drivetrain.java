@@ -25,8 +25,12 @@ import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
@@ -40,7 +44,9 @@ public CANSparkMax rightMaster = null;
 public CANSparkMax rightSlave = null;
 public CANSparkMax rightSlave2 = null;
 
-public Gyro m_gyro = new AHRS(SPI.Port.kMXP); 
+public DoubleSolenoid gearShifter = null;
+
+//public Gyro m_gyro = new AHRS(SPI.Port.kMXP); 
 
 public DifferentialDriveOdometry m_odometry;
 
@@ -54,6 +60,9 @@ DifferentialDrive differentialDrive = null;
 
 private final double ENC_TICKS_PER_INCH = 0; //Calculate Encoder ticks per inch
 
+//public RelativeEncoder leftMasterENC = leftMaster.getEncoder();
+
+
 
 //Variables for NavX (Gyroscope)
 private int driveStraightState;
@@ -61,8 +70,8 @@ private double desiredPosition;
 private double currentAngle;
 private double distance_adjust;
 
-private RelativeEncoder m_rightEncoder = rightMaster.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 4096);
-private RelativeEncoder m_leftEncoder = leftMaster.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 4096);
+//private RelativeEncoder m_rightEncoder = rightMaster.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 4096);
+//private RelativeEncoder m_leftEncoder = leftMaster.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 4096);
 
 double averageEncoderPosition;
 
@@ -78,11 +87,14 @@ double averageEncoderPosition;
     CANSparkMax rightSlave = new CANSparkMax(Constants.DRIVETRAIN_RIGHT_SLAVE, MotorType.kBrushless);
     CANSparkMax rightSlave2 = new CANSparkMax(Constants.DRIVETRAIN_RIGHT_SLAVE2, MotorType.kBrushless);
 
+
   
 
     //Grouped the Speed Controller objects.
-    left = new MotorControllerGroup(leftMaster, leftSlave, leftSlave2);
-    right = new MotorControllerGroup(rightMaster, rightSlave, rightSlave2);   
+    left = new MotorControllerGroup(leftMaster,  leftSlave,  leftSlave2);
+    right = new MotorControllerGroup(rightMaster,  rightSlave,  rightSlave2); 
+    
+    //gearShifter = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.GEAR_SHIFT, Constants.GEAR_SHIFT_TWO);
 
     //Inverted one side of drivetrain to drive forward same direction as other group. 
     left.setInverted(true);
@@ -91,7 +103,7 @@ double averageEncoderPosition;
     differentialDrive = new DifferentialDrive(left, right);
 
     //resetEncoders();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+   // m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
 
 
@@ -101,9 +113,23 @@ double averageEncoderPosition;
   //Used in DriveTank command.
   public void tankDrive (double left, double right){
 
-   differentialDrive.tankDrive(-left, -right);
+   differentialDrive.tankDrive(left, right);
   
   }
+
+  //  public void highGear(boolean gearState){
+  //   if (gearState){
+
+  //     gearShifter.set(Value.kReverse);
+
+  //   } else {
+
+  //     gearShifter.set(Value.kForward);
+
+  //   }
+  // }
+
+  
 
   @Override
   public void periodic() {
@@ -112,7 +138,7 @@ double averageEncoderPosition;
 
     // This method will be called once per scheduler run
   }
-
+  /*
   public Pose2d getPose(){
     return m_odometry.getPoseMeters();
   }

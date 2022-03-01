@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
+import java.util.concurrent.DelayQueue;
+
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -10,31 +13,51 @@ import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.concurrent.TimeUnit;
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 
 public class BallMechs extends SubsystemBase{
     //Initialization of Intake Motors
-    private static CANSparkMax intakeMotorF = new CANSparkMax(Constants.INTAKE_MOTOR_FRONT, MotorType.kBrushed);
-    private static CANSparkMax intakeMotorB = new CANSparkMax(Constants.INTAKE_MOTOR_BACK, MotorType.kBrushed);
+    public static CANSparkMax intakeMotorF = new CANSparkMax(Constants.INTAKE_MOTOR_FRONT, MotorType.kBrushed); 
+    public static CANSparkMax intakeMotorB = new CANSparkMax(Constants.INTAKE_MOTOR_BACK, MotorType.kBrushed); 
+
+    public static CANSparkMax indexerMotor = new CANSparkMax(Constants.INDEXER_MOTOR, MotorType.kBrushed);
 
     private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushless); //Change kBrushed back to kBrushless after testing
     private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushless);
 
-    //Initialization of Hopper Motors
+    //11, 4 = BACK
+    //12, 3 = FRONT
+    //13,2 = DRIVETRAIN
+    //15, 0 = Hanger
+
+    //public static RelativeEncoder shooterEncoder = shooterMotor.getEncoder();
+    //public static 
+    public RelativeEncoder shooterEncoderTwo = shooterMotorTwo.getEncoder();
+    
+    public static PneumaticHub hub = new PneumaticHub();
+    double pressure;
+
+    //Initialization of Hopper Motors\[]
+
     public static CANSparkMax hopperMotor = new CANSparkMax(Constants.HOPPER_MOTOR_ONE, MotorType.kBrushed);
     // private static CANSparkMax hopperMotor2 = new CANSparkMax(Constants.HOPPER_MOTOR_TWO, MotorType.kBrushed);
 
-    //Initialization of Cylinders
-     public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
-     public DoubleSolenoid ArmBringerUpperFo = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
-     public DoubleSolenoid ArmBringerUpperB = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5);
-     public DoubleSolenoid ArmBringerUpperBa = new DoubleSolenoid(PneumaticsModuleType.CTREPCM , 6, 7);
+    //Initialization of Cylinders 
+     public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.REVPH, 11, 4); // 12, 3
+     //public DoubleSolenoid ArmBringerUpperFr = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
+     public DoubleSolenoid ArmBringerUpperB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 3);
+     //public DoubleSolenoid ArmBringerUpperBa = new DoubleSolenoid(PneumaticsModuleType.REVPH , 6, 7);
+
+
 
 
     //public Ultrasonic ballSensor_hopper = new Ultrasonic(3, 4);
@@ -44,7 +67,7 @@ public class BallMechs extends SubsystemBase{
     //Digital Input class used to get a simple boolean value from the IR sensors.
     //returns false if it sees something, returns true otherwise. 
     public DigitalInput sensorBot = new DigitalInput(0);
-    public DigitalInput sensorTop = new DigitalInput(1);
+    //public DigitalInput sensorTop = new DigitalInput(1);
     //public DigitalInput sensorTop = new DigitalInput(2);
     //public Counter counterMid = new Counter(Counter.Mode.kSemiperiod);
     //public Counter counterTop = new Counter(Counter.Mode.kSemiperiod);
@@ -61,7 +84,59 @@ public class BallMechs extends SubsystemBase{
         shooterMotor.set(speed);
         RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
     } */
-    public void intake (double speed, boolean extend){
+
+
+    //********************Make intake into one function eventually
+
+    public void intakeFront(double speed, boolean extend){
+
+       // while (RobotContainer.driverController.getRawAxis(2) > 0.5){
+            
+           // extendIntake(extend, ArmBringerUpperF);
+            //extendIntake(!extend, ArmBringerUpperB);
+           // extendIntake(extend, ArmBringerUpperFr);
+            ArmBringerUpperF.set(Value.kForward);
+            intakeMotorF.set(-speed);
+            RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+
+     //   } 
+
+        //intakeMotorF.set(0);
+       // extendIntake(false, ArmBringerUpperF);
+       // extendIntake(false, ArmBringerUpperFr);
+
+    }
+
+    
+    public void intakeBack(double speed, boolean extend){
+
+        //while (RobotContainer.driverController.getRawAxis(3) > 0.5){
+            
+        //extendIntake(extend, ArmBringerUpperB);
+        //extendIntake(!extend, ArmBringerUpperF);
+        //ArmBringerUpperB.set(Value.kReverse);
+        System.out.println(ArmBringerUpperB.get());
+       // extendIntake(extend, ArmBringerUpperBa);
+
+        if (RobotContainer.m_leftBumper.get()){
+            System.out.println(ArmBringerUpperB.get());
+            System.out.println(sensorBot.get());
+
+        }
+
+        ArmBringerUpperB.set(Value.kReverse);
+        intakeMotorB.set(-speed);
+        RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+
+     //   } 
+
+       // intakeMotorB.set(0);
+       // extendIntake(false, ArmBringerUpperB);
+       // extendIntake(false, ArmBringerUpperBa);
+
+    }
+
+    /*public void intake (double speed, boolean extend){
            
             extendIntake(extend, ArmBringerUpperF);
             extendIntake(extend, ArmBringerUpperFo);
@@ -76,12 +151,14 @@ public class BallMechs extends SubsystemBase{
 
             }
 
+
             intakeMotorF.set(speed);
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 
     }
+    */
 
-    public void intakeTwo (double speed, boolean extend){
+    /*public void intakeTwo (double speed, boolean extend){
 
         extendIntake(extend, ArmBringerUpperB);
         extendIntake(extend, ArmBringerUpperBa);
@@ -90,21 +167,25 @@ public class BallMechs extends SubsystemBase{
             System.out.println(ArmBringerUpperB.get());
             System.out.println(sensorBot.get());
 
-            intakeMotorB.set(speed);
-            RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-
         }
+
+
+        intakeMotorB.set(speed);
+        RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+
+
     }
+    */
 
        public void extendIntake(boolean extend, DoubleSolenoid intake){
            if (extend){
 
-            intake.set(Value.kReverse);
+            intake.set(Value.kForward);
            // System.out.println("It's extended");
 
-           } else {
+           } else  {
                
-            intake.set(Value.kForward);
+            intake.set(Value.kReverse);
             //System.out.println("It's not extended");
 
            }
@@ -130,13 +211,14 @@ public class BallMechs extends SubsystemBase{
         */
   //  }
 
+  //Add code to integrate limelight with shooting. 
     public void shooter (double speed){
-         shooterMotor.set(speed);
-         shooterMotorTwo.set(-speed);
+         shooterMotor.set(-speed);
+         shooterMotorTwo.set(speed);
         
     }
     public void hopper(double speed){
-       if (sensorBot.get()){
+     /*  if (sensorBot.get()){
             //System.out.println(ballSensor_hopper.getEchoChannel());
             //System.out.println(ballSensor_hopper.getRangeMM());
             //System.out.println(ballSensor_hopper.getRangeInches());
@@ -144,10 +226,10 @@ public class BallMechs extends SubsystemBase{
             //System.out.println(ballSensor_hopper.isEnabled());
            // System.out.println(BallSensor.get());
             hopperMotor.set(0);
-      } else {
+      } else { */
           hopperMotor.set(speed);
           //System.out.println("The intake is intaking" + ": " + BallSensor.get());
-        }
+      //  }
     }
 
 
@@ -163,10 +245,10 @@ public class BallMechs extends SubsystemBase{
     // [1, 1, 0] = One ball in intake area, one ball in middle, move upwards
     // [0, 0, 1] = One ball at top, stop intake, allow for shooting.
     int counter = 0; 
-    int ballState = 0;
+   public int ballState = 0;
 
     public void runHopper(double speed){
-        hopperMotor.set(speed);
+        hopperMotor.set(-speed);
     }
 
    public boolean Balls(){
@@ -175,18 +257,15 @@ public class BallMechs extends SubsystemBase{
 
         case 0:
         System.out.println("First Stage");
-        if (!sensorBot.get()){
-            hopperMotor.set(.1);
-            ballState = 1;
-            
-        }
-
+            hopperMotor.set(-0.5);
+            ballState = 1;         
         break;
 
         case 1:
         //!sensorBot means ball is present. Inverts the DigitalInput output and turns false to true. 
         System.out.println("Second Stage");
-        if (!sensorTop.get())
+        hopperMotor.set(-0.5);
+        if (!sensorBot.get())
         {
             System.out.println("Ready to Shoot");
             hopperMotor.set(0);
@@ -201,7 +280,7 @@ public class BallMechs extends SubsystemBase{
         System.out.println("Clean-up Stage");
         hopperMotor.set(1);
         //delay
-        if (!sensorTop.get() == false && !sensorBot.get() == false){
+        if (!sensorBot.get() == false && !sensorBot.get() == false){
             ballState = 0;
             //Ensure that all balls are out before going back to 0.
         }
@@ -235,5 +314,10 @@ public class BallMechs extends SubsystemBase{
         break;
     }
     */
+    }
+
+    public void periodic(){
+      //  pressure = get
+       // SmartDashboard.putNumber("Pressure: ", pressure);
     }
 }

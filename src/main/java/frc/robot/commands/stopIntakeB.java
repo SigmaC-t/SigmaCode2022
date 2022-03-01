@@ -7,12 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.BallMechs;
 
-
-public class BallMech extends CommandBase {
-  /** Creates a new BallMech. */
-  public BallMech() {
+public class stopIntakeB extends CommandBase {
+  /** Creates a new stopIntakeB. */
+  public stopIntakeB() {
     addRequirements(RobotContainer.m_BallMechs);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -21,39 +19,24 @@ public class BallMech extends CommandBase {
   @Override
   public void initialize() {
 
+    if (RobotContainer.m_BallMechs.ArmBringerUpperB.get() == Value.kForward){
+
+      RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
+
+    }
+
+
 
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    
-    RobotContainer.m_BallMechs.Balls();
-    System.out.println("Hopper is running");
-
-
-    /*
-    double speed = .8;
-    if (RobotContainer.m_rightBumper.get()){
-    RobotContainer.m_BallMechs.intake(speed, true);
-    RobotContainer.m_BallMechs.hopper(speed);
-    }
-    else {
-      //RobotContainer.m_BallMechs.outake(speed);
-    }
-    */
-   // RobotContainer.m_BallMechs.outake(speed /*, RobotContainer.m_rightBumper*/);
-
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    RobotContainer.m_BallMechs.hopper(0);
-    RobotContainer.m_BallMechs.intakeBack(0, false);
-   // RobotContainer.m_BallMechs.outake(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

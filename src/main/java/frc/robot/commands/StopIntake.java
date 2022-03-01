@@ -19,15 +19,34 @@ public class StopIntake extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    // if (RobotContainer.m_BallMechs.ArmBringerUpperB.get() == Value.kForward){
+
+    //   RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
+
+    // }
+
+    // if (RobotContainer.m_BallMechs.ArmBringerUpperF.get() == Value.kForward){
+
+    //   RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
+
+    // }
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute( ) { 
     double speed = 0;
-    RobotContainer.m_BallMechs.intake(speed, false);
-    RobotContainer.m_BallMechs.shooter(speed);
+    //RobotContainer.m_BallMechs.intakeFront(speed, false);
+    //RobotContainer.m_BallMechs.intakeBack(speed, false);
+    RobotContainer.m_BallMechs.intakeMotorB.set(0);
+    RobotContainer.m_BallMechs.intakeMotorF.set(0);
     RobotContainer.m_BallMechs.hopper(speed);
+    RobotContainer.m_BallMechs.indexerMotor.set(speed);
+    RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward); //Change back to reverse
+    RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
   }
 
   // Called once the command ends or is interrupted.

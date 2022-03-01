@@ -7,12 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class runIntakeF extends CommandBase {
-  private double speed;
-  /** Creates a new runIntake. */
-  public runIntakeF(double x) {
-    addRequirements(RobotContainer.m_BallMechs);
-    speed = x;
+public class gearShift extends CommandBase {
+
+  private boolean shift;
+  /** Creates a new gearShift. */
+  public gearShift(boolean shift) {
+
+    shift = shift;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -23,17 +24,16 @@ public class runIntakeF extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //double speed = .5;
-    RobotContainer.m_BallMechs.intakeFront(speed, true);
-    System.out.println("Intake is working");
+
+    // RobotContainer.m_drivetrain.highGear(true);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_BallMechs.intakeFront(0, false);
-   // RobotContainer.m_BallMechs.intakeFront(0, false);
+    
+   // RobotContainer.m_drivetrain.highGear(false);
 
   }
 

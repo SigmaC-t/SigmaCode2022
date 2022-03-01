@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -26,10 +30,12 @@ import com.revrobotics.RelativeEncoder;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  public PneumaticHub hub = new PneumaticHub();
+  Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
 
   private RobotContainer m_robotContainer;
-  /**
+  /** 
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
@@ -40,7 +46,9 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     //RobotContainer.m_BallMechs.counterBot.setUpSource(0);
     //RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
-    
+    hub.enableCompressorDigital();
+   // RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
+   // RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
     
 
   }
@@ -118,10 +126,16 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
+
+
+    
     //System.out.println(RobotContainer.m_BallMechs.sensorBot.get());
     //RobotContainer.m_SigmaSight.updateValues();
     //System.out.println(RobotContainer.m_BallMechs.sensorBot.get());
-   
+   // RobotContainer.m_BallMechs.intakeFront(0.5, true);
+   // RobotContainer.m_BallMechs.intakeBack(0.5, true);
+   //RobotContainer.m_BallMechs.shooterEncoder.getVelocity();
     }
 
   @Override

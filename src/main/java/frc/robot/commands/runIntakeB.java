@@ -4,37 +4,63 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
 public class runIntakeB extends CommandBase {
+  int counter;
+  private double speed;
   /** Creates a new runIntakeB. */
-  public runIntakeB() {
+  public runIntakeB(double x) {
+    addRequirements(RobotContainer.m_BallMechs);
+    speed = x; 
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    counter = 0;
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    double speed = .5;
-    RobotContainer.m_BallMechs.intakeTwo(speed, true);
+    //double speed = .5;
+    RobotContainer.m_BallMechs.intakeBack(speed, true);
     System.out.println("Intake is working");
+    counter++;
 
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.m_BallMechs.intakeBack(0, false);
+    //double speed = 0;
+    //RobotContainer.m_BallMechs.intakeBack(speed, false);
+
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    if (counter > 200){
+
+      RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward);
+
+      return true;
+
+    }
+
+
+
     return false;
   }
 }

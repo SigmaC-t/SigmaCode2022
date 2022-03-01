@@ -10,10 +10,12 @@ import frc.robot.subsystems.BallMechs;
 import frc.robot.RobotContainer;
 
 public class runShooter extends CommandBase {
-  double speed = 0;
+  double speed;
   /** Creates a new runShooter. */
-  public runShooter() {
+  public runShooter(double x) {
     addRequirements(RobotContainer.m_BallMechs);
+    speed = x;
+   
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -27,8 +29,7 @@ public class runShooter extends CommandBase {
   @Override
   public void execute() {
 
-    //System.out.println("Running Shooter");
-
+    //System.out.println("Running Shooter");9
     //\
     //speed .8 is ideal for shooting in the top hub. 
     /*
@@ -47,12 +48,15 @@ public class runShooter extends CommandBase {
     //Make sure all balls are out by detecting top sensor changing values. 
     //Once top sensor has changed value X amount of times, stop motors
 
-    if (RobotContainer.m_BallMechs.Balls()){
-      System.out.println("Shooting");
-      double speed = .8;
-      BallMechs.hopperMotor.set(.9);
+    /*if (RobotContainer.m_BallMechs.Balls()){
+      System.out.println("Shooting"); */
+      //double speed = .8;
+      //Create a function that waits for the shooter to get up to speed before moving the hopper and indexer.
+      RobotContainer.m_BallMechs.hopperMotor.set(-0.9);
+      RobotContainer.m_BallMechs.indexerMotor.set(-0.8);
       RobotContainer.m_BallMechs.shooter(-speed);
-    }
+      System.out.println(RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity());
+  //  }
    
     
 
@@ -62,6 +66,8 @@ public class runShooter extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.m_BallMechs.shooter(0);
+    RobotContainer.m_BallMechs.hopperMotor.set(0);
+    RobotContainer.m_BallMechs.indexerMotor.set(0);
   }
 
   // Returns true when the command should end.

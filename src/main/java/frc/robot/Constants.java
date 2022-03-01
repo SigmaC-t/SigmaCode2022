@@ -17,22 +17,27 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
     //Drivetrain Motors
-    public static final int DRIVETRAIN_LEFT_MASTER = 4;
-    public static final int DRIVETRAIN_LEFT_SLAVE = 5;
-    public static final int DRIVETRAIN_LEFT_SLAVE2 = 6;
-    public static final int DRIVETRAIN_RIGHT_MASTER = 1;
-    public static final int DRIVETRAIN_RIGHT_SLAVE = 2;
-    public static final int DRIVETRAIN_RIGHT_SLAVE2 = 3;
+    public static final int DRIVETRAIN_LEFT_MASTER = 1;
+    public static final int DRIVETRAIN_LEFT_SLAVE = 2;
+    public static final int DRIVETRAIN_LEFT_SLAVE2 = 3;
+    public static final int DRIVETRAIN_RIGHT_MASTER = 4;
+    public static final int DRIVETRAIN_RIGHT_SLAVE = 5;
+    public static final int DRIVETRAIN_RIGHT_SLAVE2 = 6;
 
     //Ball Mechanism Motors (Intake & Hopper)
-    public static final int INTAKE_MOTOR_FRONT = 7;
-    public static final int INTAKE_MOTOR_BACK = 8;
+    public static final int INTAKE_MOTOR_FRONT = 7; 
+    public static final int INTAKE_MOTOR_BACK = 8; 
     public static final int HOPPER_MOTOR_ONE = 11;
-    public static final int HOPPER_MOTOR_TWO = 12;
+    //public static final int HOPPER_MOTOR_TWO = 12;
 
     //Shooter Motors
     public static final int SHOOTER_MOTOR = 9;
     public static final int SHOOTER_MOTOR_TWO = 10;
+    public static final int INDEXER_MOTOR = 12;
+
+    //Climber Motors 
+    public static final int CLIMBER_MOTOR = 13;
+    public static final int CLIMBER_MOTOR_TWO = 14;
 
 
     //Controller Inputs
@@ -45,8 +50,12 @@ public final class Constants {
     public static final double MIN_AIM_COMMAND = -.1;
     public static final double DISTANCE_KP = -0.1;
 
-  
+    //11, 4 = BACK
+    //12, 3 = FRONT
+    //13,2 = DRIVETRAIN
+    //15, 0 = Hanger
     
+
     //Two Climber Motors
 
     //Ramsete Controller Constants
@@ -65,5 +74,8 @@ public final class Constants {
     //Works well for most robots
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
+    public static final int GEAR_SHIFT = 8;
+    public static final int GEAR_SHIFT_TWO = 9;
+
 
 }
