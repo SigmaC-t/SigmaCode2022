@@ -11,10 +11,12 @@ import frc.robot.RobotContainer;
 public class runIntakeB extends CommandBase {
   int counter;
   private double speed;
+  private double hopper;
   /** Creates a new runIntakeB. */
-  public runIntakeB(double x) {
+  public runIntakeB(double x, double y) {
     addRequirements(RobotContainer.m_BallMechs);
     speed = x; 
+    hopper = y;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -31,7 +33,8 @@ public class runIntakeB extends CommandBase {
   public void execute() {
 
     //double speed = .5;
-    RobotContainer.m_BallMechs.intakeBack(speed, true);
+    RobotContainer.m_BallMechs.intakeBack(speed, hopper , true);
+    
     System.out.println("Intake is working");
     counter++;
 
@@ -41,7 +44,7 @@ public class runIntakeB extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.m_BallMechs.intakeBack(0, false);
+    RobotContainer.m_BallMechs.intakeBack(0, hopper, false);
     //double speed = 0;
     //RobotContainer.m_BallMechs.intakeBack(speed, false);
 
@@ -51,13 +54,13 @@ public class runIntakeB extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    if (counter > 200){
+    // if (counter > 200){
 
-      RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward);
+    //   RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward);
 
-      return true;
+    //   return true;
 
-    }
+    // }
 
 
 

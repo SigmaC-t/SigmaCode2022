@@ -12,7 +12,7 @@ public class runHopper extends CommandBase {
   
   /** Creates a new runHopper. */
   public runHopper(double x) {
-    addRequirements(RobotContainer.m_BallMechs);
+   // addRequirements(RobotContainer.m_BallMechs);
     speed = x;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -32,7 +32,11 @@ public class runHopper extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+    RobotContainer.m_BallMechs.runHopper(0);
+
+  }
 
   // Returns true when the command should end.
   @Override

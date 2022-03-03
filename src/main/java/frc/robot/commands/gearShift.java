@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
@@ -11,21 +13,25 @@ public class gearShift extends CommandBase {
 
   private boolean shift;
   /** Creates a new gearShift. */
-  public gearShift(boolean shift) {
+  public gearShift(boolean x) {
 
-    shift = shift;
+    shift = x;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    RobotContainer.m_drivetrain.highGear(true);
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    // RobotContainer.m_drivetrain.highGear(true);
+   // RobotContainer.m_drivetrain.highGear(shift);
 
   }
 
@@ -33,13 +39,14 @@ public class gearShift extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     
-   // RobotContainer.m_drivetrain.highGear(false);
+  RobotContainer.m_drivetrain.highGear(false);
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    
     return false;
   }
 }

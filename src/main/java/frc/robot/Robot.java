@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.BallMech;
 import frc.robot.commands.BasicAuto;
 import frc.robot.commands.Drivestraight;
@@ -46,7 +47,9 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     //RobotContainer.m_BallMechs.counterBot.setUpSource(0);
     //RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
-    hub.enableCompressorDigital();
+    //hub.enableCompressorDigital();
+    hub.enableCompressorAnalog(90, 105); // This is where it was 120 PSI.
+    RobotContainer.m_drivetrain.gearShifter.set(Value.kForward);
    // RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
    // RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
     
@@ -126,6 +129,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
+    //System.out.println(hub.getPressure(0));
+    
+    SmartDashboard.putNumber("Pressure", hub.getPressure(0));
 
 
 

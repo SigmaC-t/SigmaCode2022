@@ -17,13 +17,19 @@ import frc.robot.commands.DriveToRange;
 import frc.robot.commands.Focus;
 import frc.robot.subsystems.BallMechs;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.SigmaSight;
 import frc.robot.commands.StopIntake;
+import frc.robot.commands.ascendHanger;
+import frc.robot.commands.descendHanger;
 import frc.robot.commands.gearShift;
+import frc.robot.commands.lowerArms;
 import frc.robot.commands.runHopper;
 import frc.robot.commands.runIntakeB;
 import frc.robot.commands.runIntakeF;
 import frc.robot.commands.runShooter;
+import frc.robot.commands.stopHanger;
+import frc.robot.commands.upperArms;
 import edu.wpi.first.wpilibj2.command.button.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -40,6 +46,7 @@ public class RobotContainer {
   public static final Drivetrain m_drivetrain = new Drivetrain();
   public static final BallMechs m_BallMechs = new BallMechs();
   public static final SigmaSight m_SigmaSight = new SigmaSight();
+  public static final Hanger m_Hanger = new Hanger();
   public static JoystickButton m_buttonA, m_buttonB, m_buttonX, m_buttonXRaw, m_buttonY, m_leftBumper, m_leftBumperReleased, m_rightBumper, m_leftStick, m_rightStick, o_buttonBReleased;
   public static double m_leftTrigger, m_leftAnalogX, m_rightAnalogX, m_leftAnalogY, m_rightAnalogY;
   double m_rightTrigger;
@@ -56,18 +63,24 @@ public class RobotContainer {
   Button dpadDownButton = new Button(() -> driverController.getPOV() == 180);
   Button dpadUpButton = new Button(() -> driverController.getPOV() == 0);
 
+  Button dpadDownButtonOP = new Button(() -> operatorController.getPOV() == 180);
+  Button dpadUpButtonOP = new Button(() -> operatorController.getPOV() == 0);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
     m_drivetrain.setDefaultCommand(new DriveTank());
     m_BallMechs.setDefaultCommand(new StopIntake());
+    m_Hanger.setDefaultCommand(new stopHanger());
 
-    leftTriggerButton.whenPressed(new runIntakeF(0.5));
+    leftTriggerButton.whenPressed(new runIntakeF(0.9, 0.8));
     leftTriggerButton.whenReleased(new StopIntake());
     
-    rightTriggerButton.whenPressed(new runIntakeB(0.5));
+    rightTriggerButton.whenPressed(new runIntakeB(0.9, 0.8));
     rightTriggerButton.whenReleased(new StopIntake());
+
+    
     //Intake Code
    // m_rightBumper.whenPressed(new runIntakeF());
    // m_rightBumper.whenReleased(new StopIntake());
@@ -94,7 +107,7 @@ public class RobotContainer {
     //m_buttonA.whenHeld(new DriveToRange());
 
     //High Goal Shooting
-    m_buttonY.whenPressed(new runShooter(0.8));
+    m_buttonY.whenPressed(new runShooter(0.8)); //wAS 0.8
     m_buttonY.whenReleased(new StopIntake());
 
     //Low Goal Shooting
@@ -102,25 +115,47 @@ public class RobotContainer {
     m_buttonA.whenReleased(new StopIntake());
 
     //Automatic hopper
-    m_rightBumper.whenPressed(new AutoHopper());
+    //m_rightBumper.whenPressed(new AutoHopper());
+
+    m_rightBumper.whenHeld(new DriveToRange());
 
     //Run Hopper upwards
-    dpadDownButton.whenPressed(new runHopper(-0.1));
-    dpadDownButton.whenReleased(new StopIntake());
+  
+    dpadDownButton.whileHeld(new runHopper(-0.4));
+  // dpadDownButton.whenPressed(new runHopper(-0.4));
+  // dpadDownButton.whenReleased(new StopIntake());
     
     //Run Hopper downwards
-    dpadUpButton.whenPressed(new runHopper(0.1));
-    dpadUpButton.whenReleased(new StopIntake());
+    dpadUpButton.whileHeld(new runHopper(0.4));
 
-    m_leftBumper.whenPressed(new gearShift(true));
-    m_leftBumper.whenReleased(new gearShift(false));
+    //dpadUpButton.whenPressed(new runHopper(0.4));
+   // dpadUpButton.whenReleased(new StopIntake());
 
-   // m_buttonB.whenPressed(new runIntakeB(-0.5));
-   // m_buttonB.whenReleased(new StopIntake());
+   m_leftBumper.whileHeld(new gearShift(true));
+   // m_leftBumper.whenPressed(new gearShift(true));
+   // m_leftBumper.whenReleased(new gearShift(false));
 
-   // m_buttonX.whenPressed(new runIntakeF(-0.5));
-   // m_buttonX.whenReleased(new StopIntake());
+   m_buttonB.whenPressed(new runIntakeB(-0.9, -0.8));
+   m_buttonB.whenReleased(new StopIntake());
 
+   m_buttonX.whenPressed(new runIntakeF(-0.9, -0.8)); 
+   m_buttonX.whenReleased(new StopIntake());
+
+   o_buttonA.whenPressed(new lowerArms());
+
+   o_buttonY.whenPressed(new upperArms());
+
+   dpadDownButtonOP.whenPressed(new ascendHanger());
+   dpadDownButton.whenReleased(new stopHanger());
+
+   dpadUpButtonOP.whenPressed(new descendHanger());
+   dpadUpButtonOP.whenReleased(new stopHanger());
+
+   o_buttonB.whenPressed(new runIntakeB(-0.9, -0.8));
+   o_buttonB.whenReleased(new StopIntake());
+
+   o_buttonX.whenPressed(new runIntakeF(-0.9, -0.8));
+   o_buttonX.whenReleased(new StopIntake());
 
     
 
@@ -143,6 +178,15 @@ public class RobotContainer {
         m_buttonB = new JoystickButton(mainController, XboxController.Button.kB.value);
         m_buttonX = new JoystickButton(mainController, XboxController.Button.kX.value);
         m_buttonY = new JoystickButton(mainController, XboxController.Button.kY.value);
+
+        o_rightBumper = new JoystickButton(operatorController, XboxController.Button.kRightBumper.value);
+        o_leftBumper = new JoystickButton(operatorController, XboxController.Button.kLeftBumper.value);
+        o_buttonB = new JoystickButton(operatorController, XboxController.Button.kB.value);
+        o_buttonX = new JoystickButton(operatorController, XboxController.Button.kX.value);
+        o_buttonY = new JoystickButton(operatorController, XboxController.Button.kY.value);
+        o_buttonA = new JoystickButton(operatorController, XboxController.Button.kA.value);
+
+
        // Trigger leftTrigger = new Trigger(m_BallMechs.leftTrigger());
         //m_leftTrigger = driverController.getRawAxis(2);
         //m_rightTrigger = driverController.getRawAxis(3);

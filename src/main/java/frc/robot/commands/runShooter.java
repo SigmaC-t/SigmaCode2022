@@ -11,6 +11,7 @@ import frc.robot.RobotContainer;
 
 public class runShooter extends CommandBase {
   double speed;
+  int counter;
   /** Creates a new runShooter. */
   public runShooter(double x) {
     addRequirements(RobotContainer.m_BallMechs);
@@ -22,6 +23,8 @@ public class runShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    counter = 0;
 
   }
 
@@ -52,9 +55,21 @@ public class runShooter extends CommandBase {
       System.out.println("Shooting"); */
       //double speed = .8;
       //Create a function that waits for the shooter to get up to speed before moving the hopper and indexer.
-      RobotContainer.m_BallMechs.hopperMotor.set(-0.9);
-      RobotContainer.m_BallMechs.indexerMotor.set(-0.8);
-      RobotContainer.m_BallMechs.shooter(-speed);
+    RobotContainer.m_BallMechs.shooter(-speed);
+     if (RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity() >= -4350){
+       counter++;
+
+       if (counter > 20){
+
+        System.out.println(RobotContainer.m_BallMechs.shooterEncoderTwo.getPosition());
+        RobotContainer.m_BallMechs.hopperMotor.set(-0.9);
+        RobotContainer.m_BallMechs.indexerMotor.set(-0.8);
+
+       }
+       
+
+      }
+     // RobotContainer.m_BallMechs.shooter(-speed);
       System.out.println(RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity());
   //  }
    

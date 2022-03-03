@@ -36,12 +36,13 @@ public final class Constants {
     public static final int INDEXER_MOTOR = 12;
 
     //Climber Motors 
-    public static final int CLIMBER_MOTOR = 13;
-    public static final int CLIMBER_MOTOR_TWO = 14;
+    public static final int HANGER_MOTOR = 13;
+    public static final int HANGER_MOTOR_TWO = 14;
 
 
     //Controller Inputs
     public static final int DRIVER_CONTROLLER = 0;
+    public static final int OP_CONTROLLER = 1;
     public static final int DRIVER_CONTROLLER_MOVE_AXIS = 1;
     public static final int DRIVER_CONTROLLER_ROTATE_AXIS = 5;
 
@@ -74,8 +75,12 @@ public final class Constants {
     //Works well for most robots
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
-    public static final int GEAR_SHIFT = 8;
-    public static final int GEAR_SHIFT_TWO = 9;
+    public static final int GEAR_SHIFT = 13;
+    public static final int GEAR_SHIFT_TWO = 2;
+    public static final int ARMS_FWD = 15;
+    public static final int ARMS_BACK = 0;
+    public static final int UP_MOTOR = 15;
+
 
 
 }

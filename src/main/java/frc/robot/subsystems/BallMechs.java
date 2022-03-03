@@ -31,9 +31,13 @@ public class BallMechs extends SubsystemBase{
 
     public static CANSparkMax indexerMotor = new CANSparkMax(Constants.INDEXER_MOTOR, MotorType.kBrushed);
 
+    public static CANSparkMax upMotor = new CANSparkMax(15, MotorType.kBrushed);
+
     private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushless); //Change kBrushed back to kBrushless after testing
     private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushless);
 
+    double HopperSpeed = 0.4;
+    //toggle hopper 
     //11, 4 = BACK
     //12, 3 = FRONT
     //13,2 = DRIVETRAIN
@@ -52,16 +56,16 @@ public class BallMechs extends SubsystemBase{
     // private static CANSparkMax hopperMotor2 = new CANSparkMax(Constants.HOPPER_MOTOR_TWO, MotorType.kBrushed);
 
     //Initialization of Cylinders 
-     public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.REVPH, 11, 4); // 12, 3
+     public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.REVPH, 11, 4); // 11, 4
      //public DoubleSolenoid ArmBringerUpperFr = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
-     public DoubleSolenoid ArmBringerUpperB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 3);
+     public DoubleSolenoid ArmBringerUpperB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 3); // 12, 3
      //public DoubleSolenoid ArmBringerUpperBa = new DoubleSolenoid(PneumaticsModuleType.REVPH , 6, 7);
 
 
 
 
     //public Ultrasonic ballSensor_hopper = new Ultrasonic(3, 4);
-    //public AnalogPotentiometer BallSensor = new AnalogPotentiometer(1);
+    //public AnalogPotentiometer BallSensor = new AnalogPotentiomete`r(1);
 
     //Initialization of IR Sensors
     //Digital Input class used to get a simple boolean value from the IR sensors.
@@ -78,104 +82,64 @@ public class BallMechs extends SubsystemBase{
 	{
 		intakeMotorF.setIdleMode(IdleMode.kBrake);
         hopperMotor.setIdleMode(IdleMode.kBrake);
-        //shooterMotor.setIdleMode(IdleMode.kBrake);
 	}
-    /*public void shooter(double speed){
-        shooterMotor.set(speed);
-        RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-    } */
 
 
     //********************Make intake into one function eventually
 
-    public void intakeFront(double speed, boolean extend){
+    public void intakeFront(double speed, double hopper, boolean extend){
 
-       // while (RobotContainer.driverController.getRawAxis(2) > 0.5){
-            
-           // extendIntake(extend, ArmBringerUpperF);
-            //extendIntake(!extend, ArmBringerUpperB);
-           // extendIntake(extend, ArmBringerUpperFr);
+       
+
             ArmBringerUpperF.set(Value.kForward);
             intakeMotorF.set(-speed);
+
+      // if (sensorBot.get()){
+            runHopper(hopper);
+            upMotor.set(speed);
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 
-     //   } 
+    //  } else if (!sensorBot.get()){
 
-        //intakeMotorF.set(0);
-       // extendIntake(false, ArmBringerUpperF);
-       // extendIntake(false, ArmBringerUpperFr);
+     //  runHopper(0);
+     //   upMotor.set(0);
+
+   //   } 
+
 
     }
 
+
+    public void moveBallUp(){
+
+
+
+    }
     
-    public void intakeBack(double speed, boolean extend){
+    public void intakeBack(double speed, double hopper, boolean extend){
 
-        //while (RobotContainer.driverController.getRawAxis(3) > 0.5){
-            
-        //extendIntake(extend, ArmBringerUpperB);
-        //extendIntake(!extend, ArmBringerUpperF);
-        //ArmBringerUpperB.set(Value.kReverse);
+
         System.out.println(ArmBringerUpperB.get());
-       // extendIntake(extend, ArmBringerUpperBa);
 
-        if (RobotContainer.m_leftBumper.get()){
-            System.out.println(ArmBringerUpperB.get());
-            System.out.println(sensorBot.get());
+     //  if (sensorBot.get()){
 
-        }
+            upMotor.set(speed);
+            runHopper(hopper);
+
+
+     //  } else if (!sensorBot.get()){
+
+           // upMotor.set(0);
+           // runHopper(0);
+   
+     //   }
 
         ArmBringerUpperB.set(Value.kReverse);
         intakeMotorB.set(-speed);
         RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 
-     //   } 
-
-       // intakeMotorB.set(0);
-       // extendIntake(false, ArmBringerUpperB);
-       // extendIntake(false, ArmBringerUpperBa);
 
     }
-
-    /*public void intake (double speed, boolean extend){
-           
-            extendIntake(extend, ArmBringerUpperF);
-            extendIntake(extend, ArmBringerUpperFo);
-
-            if (RobotContainer.m_rightBumper.get()){
-
-                System.out.println(ArmBringerUpperF.get());
-                System.out.println(ArmBringerUpperFo.get());
-                //BallSensor.get();
-                System.out.println(sensorBot.get());
-
-
-            }
-
-
-            intakeMotorF.set(speed);
-            RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-
-    }
-    */
-
-    /*public void intakeTwo (double speed, boolean extend){
-
-        extendIntake(extend, ArmBringerUpperB);
-        extendIntake(extend, ArmBringerUpperBa);
-
-        if (RobotContainer.m_leftBumper.get()){
-            System.out.println(ArmBringerUpperB.get());
-            System.out.println(sensorBot.get());
-
-        }
-
-
-        intakeMotorB.set(speed);
-        RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-
-
-    }
-    */
 
        public void extendIntake(boolean extend, DoubleSolenoid intake){
            if (extend){
@@ -191,25 +155,6 @@ public class BallMechs extends SubsystemBase{
            }
        }
 
-      //  }
-    
-     /* public void outake(double speed /* boolean bumper*///)
-	//{
-       // if (bumper){
-            //ArmBringerUpper.set(Value.kReverse);
-            /* System.out.println(ArmBringerUpper.get());
-            intakeMotor.set(-speed);
-            RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
-
-            */
-      //  }
-		
-		/*else
-		{
-			intakeMotor.set(0.25);
-		}
-        */
-  //  }
 
   //Add code to integrate limelight with shooting. 
     public void shooter (double speed){
@@ -218,18 +163,9 @@ public class BallMechs extends SubsystemBase{
         
     }
     public void hopper(double speed){
-     /*  if (sensorBot.get()){
-            //System.out.println(ballSensor_hopper.getEchoChannel());
-            //System.out.println(ballSensor_hopper.getRangeMM());
-            //System.out.println(ballSensor_hopper.getRangeInches());
-            //System.out.println("Ball is detected");
-            //System.out.println(ballSensor_hopper.isEnabled());
-           // System.out.println(BallSensor.get());
-            hopperMotor.set(0);
-      } else { */
+
           hopperMotor.set(speed);
-          //System.out.println("The intake is intaking" + ": " + BallSensor.get());
-      //  }
+
     }
 
 

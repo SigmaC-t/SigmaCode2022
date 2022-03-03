@@ -7,33 +7,28 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class Drivestraight extends CommandBase {
-  /** Creates a new Drivestraight. */
-  public Drivestraight() {
-    addRequirements(RobotContainer.m_drivetrain);
+public class lowerArms extends CommandBase {
+  /** Creates a new lowerArms. */
+  public lowerArms() {
+    addRequirements(RobotContainer.m_Hanger);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
-  int Counter = 0;
-  
   @Override
   public void execute() {
-    System.out.println("Please work");
-    RobotContainer.m_drivetrain.auto();
-    Counter++;
 
-    /*if (Counter > 50){
-      RobotContainer.m_drivetrain.tankDrive(0, 0);
-    }
-    Counter++;
-    */
+    System.out.println("Lowering Arm");
+    //RobotContainer.m_Hanger.lowerArms();
+    
   }
-  
 
   // Called once the command ends or is interrupted.
   @Override
@@ -42,15 +37,16 @@ public class Drivestraight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Counter > 100){
-      
-      System.out.println("DriveStraight is finished");
+
+    if (RobotContainer.m_Hanger.lowerArms()){
+
+
+      System.out.println("Lowering Arm");
       return true;
 
-    } else {
-
-      return false;
-
     }
+
+    return false;
+
   }
 }

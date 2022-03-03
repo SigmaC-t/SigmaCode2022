@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
 public class DriveToRange extends CommandBase {
+  int counter;
   /** Creates a new DriveToRange. */
   public DriveToRange() {
     addRequirements(RobotContainer.m_drivetrain, RobotContainer.m_SigmaSight);
@@ -16,7 +17,11 @@ public class DriveToRange extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    counter = 0;
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -24,6 +29,7 @@ public class DriveToRange extends CommandBase {
     RobotContainer.m_SigmaSight.getInRange(RobotContainer.m_drivetrain);
     RobotContainer.m_SigmaSight.left_command = 0;
     RobotContainer.m_SigmaSight.right_command = 0;
+    counter++;
   }
 
   // Called once the command ends or is interrupted.
@@ -33,6 +39,13 @@ public class DriveToRange extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    if (counter > 200){
+
+      return true;
+      
+    }
+    
     return false;
   }
 }

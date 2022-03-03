@@ -58,6 +58,8 @@ MotorControllerGroup right = null;
 //DIfferential Drive initial initalization
 DifferentialDrive differentialDrive = null;
 
+
+
 private final double ENC_TICKS_PER_INCH = 0; //Calculate Encoder ticks per inch
 
 //public RelativeEncoder leftMasterENC = leftMaster.getEncoder();
@@ -94,7 +96,7 @@ double averageEncoderPosition;
     left = new MotorControllerGroup(leftMaster,  leftSlave,  leftSlave2);
     right = new MotorControllerGroup(rightMaster,  rightSlave,  rightSlave2); 
     
-    //gearShifter = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.GEAR_SHIFT, Constants.GEAR_SHIFT_TWO);
+    gearShifter = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.GEAR_SHIFT, Constants.GEAR_SHIFT_TWO);
 
     //Inverted one side of drivetrain to drive forward same direction as other group. 
     left.setInverted(true);
@@ -102,6 +104,7 @@ double averageEncoderPosition;
     //Instantiated Differential Drive that manipulates the MotorGroups (Left and Right side of robot)
     differentialDrive = new DifferentialDrive(left, right);
 
+    
     //resetEncoders();
    // m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
 
@@ -113,21 +116,21 @@ double averageEncoderPosition;
   //Used in DriveTank command.
   public void tankDrive (double left, double right){
 
-   differentialDrive.tankDrive(left, right);
+   differentialDrive.tankDrive(-left, -right);
   
   }
 
-  //  public void highGear(boolean gearState){
-  //   if (gearState){
+    public void highGear(boolean gearState){
+     if (gearState){
 
-  //     gearShifter.set(Value.kReverse);
+       gearShifter.set(Value.kReverse);
 
-  //   } else {
+    } else if (!gearState){
 
-  //     gearShifter.set(Value.kForward);
+       gearShifter.set(Value.kForward);
 
-  //   }
-  // }
+     }
+ }
 
   
 

@@ -4,53 +4,57 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class Drivestraight extends CommandBase {
-  /** Creates a new Drivestraight. */
-  public Drivestraight() {
-    addRequirements(RobotContainer.m_drivetrain);
+public class AutoIntake extends CommandBase {
+
+  int counter;
+  /** Creates a new AutoIntake. */
+  public AutoIntake() {
+    addRequirements(RobotContainer.m_BallMechs);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    counter = 0;
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
-  int Counter = 0;
-  
   @Override
   public void execute() {
-    System.out.println("Please work");
-    RobotContainer.m_drivetrain.auto();
-    Counter++;
 
-    /*if (Counter > 50){
-      RobotContainer.m_drivetrain.tankDrive(0, 0);
-    }
-    Counter++;
-    */
+    RobotContainer.m_BallMechs.intakeBack(0.8, 0.8 , true);
+    System.out.println("Intake is working");
+    counter++;
+
   }
-  
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+    RobotContainer.m_BallMechs.intakeBack(0, 0, false);
+    RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward); 
+
+
+
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Counter > 100){
-      
-      System.out.println("DriveStraight is finished");
+
+    if (counter > 200){
+
       return true;
 
-    } else {
-
-      return false;
-
     }
+    return false;
   }
 }

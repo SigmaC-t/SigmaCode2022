@@ -10,10 +10,12 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SigmaSight;
 
 public class Focus extends CommandBase {
+  int counter;
   SigmaSight limelight = RobotContainer.m_SigmaSight;
   /** Creates a new Focus. */
   public Focus() {
     addRequirements(RobotContainer.m_drivetrain, RobotContainer.m_SigmaSight);
+    counter = 0;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -28,10 +30,15 @@ public class Focus extends CommandBase {
     RobotContainer.m_SigmaSight.Focus(RobotContainer.m_drivetrain);
     RobotContainer.m_SigmaSight.left_command = 0;
     RobotContainer.m_SigmaSight.right_command = 0;
+    counter++;
+
+    if (counter > 100){
+
+      new runShooter(0.4);
+
+    }
 
 
-
-    //Dr.Stone < Vinland Saga
     
    /* double heading_error = limelight.xVal;
     limelight.steering_adjust = limelight.turnKp * limelight.xVal;
@@ -53,6 +60,13 @@ public class Focus extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    if (counter > 200){
+
+      return true;
+
+    }
+
     return false;
   }
 }

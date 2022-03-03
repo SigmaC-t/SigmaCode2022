@@ -141,6 +141,12 @@ public class SigmaSight extends SubsystemBase {
         System.out.println("Right CommandL " + right_command);
         
 }
+
+public void turnOffLimeLight(){
+
+
+
+}
   
   /** Creates a new SigmaSight. */
   public SigmaSight() {}
