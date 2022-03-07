@@ -256,11 +256,11 @@ double averageEncoderPosition;
   int counter = 0;
 
   //MVP autonomous code that moves the robot backwards for 5 seconds
-  public void auto() {
+  public void auto(double speed) {
 
     if (counter < 250) {
 
-     tankDrive(0.75, 0.75);
+     tankDrive(speed, speed); // Was 0.75;
 
     }
 

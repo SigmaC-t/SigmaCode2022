@@ -87,7 +87,7 @@ public class BallMechs extends SubsystemBase{
 
     //********************Make intake into one function eventually
 
-    public void intakeFront(double speed, double hopper, boolean extend){
+    public void intakeFront(double speed, double hopper, double upSpeed, boolean extend){
 
        
 
@@ -96,7 +96,7 @@ public class BallMechs extends SubsystemBase{
 
       // if (sensorBot.get()){
             runHopper(hopper);
-            upMotor.set(speed);
+            upMotor.set(upSpeed);
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 
     //  } else if (!sensorBot.get()){
@@ -116,14 +116,14 @@ public class BallMechs extends SubsystemBase{
 
     }
     
-    public void intakeBack(double speed, double hopper, boolean extend){
+    public void intakeBack(double speed, double hopper, double upSpeed, boolean extend){
 
 
         System.out.println(ArmBringerUpperB.get());
 
      //  if (sensorBot.get()){
 
-            upMotor.set(speed);
+            upMotor.set(upSpeed);
             runHopper(hopper);
 
 

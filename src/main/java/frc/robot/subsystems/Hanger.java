@@ -7,13 +7,16 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import java.lang.Math;
 
 public class Hanger extends SubsystemBase {
   public CANSparkMax hangR = new CANSparkMax(Constants.HANGER_MOTOR, MotorType.kBrushless);
@@ -24,12 +27,16 @@ public class Hanger extends SubsystemBase {
 
   SparkMaxPIDController m_PidControllerR = hangR.getPIDController();
   SparkMaxPIDController m_PidControllerL = hangL.getPIDController();
+  public RelativeEncoder rENC = hangR.getEncoder();
+  public RelativeEncoder lENC = hangL.getEncoder();
 
-  RelativeEncoder rENC = hangR.getEncoder();
-  RelativeEncoder lENC = hangL.getEncoder();
+  double maxPosition = 128; //95
+  double minPosition = 0;
+  //double midPosition = 50;
 
-  
+  //100 rENC, -100 lENC. from max to min
 
+  DigitalInput hangSensor = new DigitalInput(1);
   double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, speed;
   //public static DoubleSolenoid hangLARM = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.LEFT_ARM_FWD, Constants.LEFT_ARM_BACK);
   //Test individual motors to set direction 
@@ -40,6 +47,9 @@ public class Hanger extends SubsystemBase {
   /** Creates a new Hanger. */
 
   public Hanger() {
+
+    hangR.setIdleMode(IdleMode.kBrake);
+    hangL.setIdleMode(IdleMode.kBrake);
 
     hangARMS.set(Value.kReverse);
     kP = 0.1;
@@ -53,7 +63,10 @@ public class Hanger extends SubsystemBase {
     m_PidControllerL.setOutputRange(kMinOutput, kMaxOutput);
     m_PidControllerR.setOutputRange(kMinOutput, kMaxOutput);
 
-    speed = 0.1;
+    speed = 0.5;
+
+    lENC.setPosition(0);
+    rENC.setPosition(0);
  
   }
 
@@ -73,15 +86,29 @@ public class Hanger extends SubsystemBase {
 
   }
 
-  public void ascendArms(){
+  public void ascendArms(double speed){
 
    // if (hangARMS.get() == Value.kForward){
 
+  if (rENC.getPosition() < maxPosition){
 
-      hangL.set(speed);
+      hangR.set(speed);
+      hangL.set(-speed);
+      System.out.println("rENC: " + rENC.getPosition());
+   //   System.out.println("lENC " + lENC.getPosition());
+      
+  } else if (rENC.getPosition() >= maxPosition){
+
+    hangR.set(0);
+    hangL.set(0);
+    System.out.println("TOO HIGH");
+
+ }
+ 
+     /* hangL.set(speed);
       hangR.set(-speed);
       System.out.println("HangL: " + lENC.getPosition());
-      System.out.println("HangR: " + rENC.getPosition());
+      System.out.println("HangR: " + rENC.getPosition()); */
 
    // }
 
@@ -89,14 +116,205 @@ public class Hanger extends SubsystemBase {
 
   }
 
-  public void descendArms(){
+  public void descendHome (){
 
-    hangR.set(speed);
-    hangL.set(-speed);
-    System.out.println("HangL: " + lENC.getPosition());
-    System.out.println("HangR: " + rENC.getPosition());
+    hangR.set(-0.2);
+    hangL.set(0.2);
+    rENC.setPosition(0);
+
   }
 
+  public void descendArms(double speed){
+
+if (rENC.getPosition() > minPosition){
+
+      hangR.set(-speed);
+      hangL.set(speed);
+      System.out.println("rENC: " + rENC.getPosition());
+    //  System.out.println("lENC " + lENC.getPosition());
+
+ } else if (rENC.getPosition() <= minPosition){
+
+     hangR.set(0);
+     hangL.set(0);
+     System.out.println("TOO LOW");
+//     rENC.setPosition(0);
+
+   }
+   
+   /* hangR.set(speed);
+    hangL.set(-speed);
+    System.out.println("HangL: " + lENC.getPosition());
+    System.out.println("HangR: " + rENC.getPosition()); */
+
+  }
+
+
+ // public void 
+  int climbStage = 0;
+  // public void autoHanger(){
+  
+  //   switch (climbStage){
+  //     case 0:
+  //     if(rENC.getPosition() < maxPosition){
+  //     hangL.set(0.1);
+  //     hangR.set(-0.1);
+  //     }
+  //     else if (rENC.getPosition() >= maxPosition){
+  //       climbStage = 1;
+  //     }
+      
+  //     case 1: 
+  //     if(rENC.getPosition() > minPosition){
+  //       hangL.set(-0.1);
+  //       hangR.set(0.1);
+  //     } else if(rENC.getPosition() <= minPosition){
+  //       climbStage = 2;
+  //     }
+
+  //     case 2:
+  //     if(rENC.getPosition() < midPosition){
+  //       hangL.set(0.1);
+  //       hangR.set(-0.1);
+  //     }
+  //     else if(rENC.getPosition() >= midPosition){
+  //       climbStage = 3;
+  //     }
+  //     case 3:
+  //     if(hangARMS.get() == Value.kReverse){
+  //       hangARMS.set(Value.kForward);
+  //       //delay
+  //       climbStage = 4;
+  //     }
+      
+
+  //     case 4: 
+  //     if(rENC.getPosition() < maxPosition){
+  //       hangL.set(0.1);
+  //       hangR.set(-0.1);
+  //     }
+  //     else if (rENC.getPosition() >= maxPosition){
+  //       climbStage = 5;
+  //     }
+      
+  //     case 5:
+  //     //if(rENC.getPosition() )
+  //   }
+  // }
+
+  int hangState = 0;
+  int counter = 0;
+  public void autoClimb(){
+
+    switch (hangState){
+
+      case 0: 
+      counter++;
+      if(counter < 50){
+
+        descendArms(0.3);
+
+      }
+      else{
+        counter = 0;
+        hangState = 1;
+      }
+
+      break;
+
+      case 1: 
+      if (rENC.getPosition() > 5){
+
+        descendArms(1);
+
+      } else {
+
+        hangState = 2;
+
+      }
+
+      break;
+
+      case 2: 
+
+      if (rENC.getPosition() <= 30){
+
+        ascendArms(.3);
+
+      } else {
+
+        hangState = 3;
+
+      }
+
+      break;
+
+      case 3: 
+      counter++;
+      lowerArms();
+      if (counter > 10){
+
+        hangState = 4;
+        counter = 0;
+
+      }
+
+      break;
+
+      case 4:
+      if (rENC.getPosition() < maxPosition){
+
+        ascendArms(0.5);
+
+      } else {
+
+        upArms();
+        hangState = 5;
+
+      }
+
+      break;
+
+      case 5: 
+      if (rENC.getPosition() > 5){
+
+        descendArms(1);
+
+      }
+
+      break;
+
+    }
+  }
+
+  //Work on PID loop.
+  //if sensor is added, use it here.
+  // public boolean resetToStart(){
+
+  //   hangL.set(-0.1);
+  //   hangR.set(0.1);
+  // }
+
+  //   if (rENC.getPosition() == 0 && lENC.getPosition()== 0){
+
+  //     hangL.set(-0.1);
+  //     hangR.set(0.1);
+
+  //     if (rENC.getPosition() > minPosition){
+
+  //       hangL.set(-0.1);
+  //       hangR.set(0.1);
+
+  //     }
+
+
+  //   }
+
+    
+
+
+  // }
+  
 
   @Override
   public void periodic() {

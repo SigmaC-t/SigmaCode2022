@@ -7,37 +7,44 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class Drivestraight extends CommandBase {
-  double speed;
-  /** Creates a new Drivestraight. */
-  public Drivestraight(double x) {
-    addRequirements(RobotContainer.m_drivetrain);
+public class AutoShooter extends CommandBase {
+  int counter;
+  /** Creates a new AutoShooter. */
+  public AutoShooter() {
+    addRequirements(RobotContainer.m_BallMechs);
     // Use addRequirements() here to declare subsystem dependencies.
-    speed = x;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
+    counter = 0;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
-  int Counter = 0;
-
   @Override
   public void execute() {
-    System.out.println("Please work");
-    RobotContainer.m_drivetrain.auto(speed);
-    Counter++;
 
-    /*if (Counter > 50){
-      RobotContainer.m_drivetrain.tankDrive(0, 0);
-    }
-    Counter++;
-    */
+
+    RobotContainer.m_BallMechs.shooter(-0.8);
+    RobotContainer.m_BallMechs.indexerMotor.set(-0.7);
+    
+    if (RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity() >= -4350){
+      counter++;
+
+      if (counter > 30){
+       System.out.println(RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity());
+       RobotContainer.m_BallMechs.hopperMotor.set(-0.7);
+
+      }
+      
+
+     }
+
+
   }
-  
 
   // Called once the command ends or is interrupted.
   @Override
@@ -46,15 +53,13 @@ public class Drivestraight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Counter > 100){
-      
-      System.out.println("DriveStraight is finished");
+
+    if (counter > 100){
+
       return true;
 
-    } else {
-
-      return false;
-
     }
+    return false;
   }
 }
+

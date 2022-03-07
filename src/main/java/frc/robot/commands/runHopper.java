@@ -26,6 +26,7 @@ public class runHopper extends CommandBase {
   public void execute() {
 
     RobotContainer.m_BallMechs.runHopper(speed);
+    RobotContainer.m_BallMechs.upMotor.set(speed);
     System.out.println("running Hopper");
 
   }
@@ -35,6 +36,7 @@ public class runHopper extends CommandBase {
   public void end(boolean interrupted) {
 
     RobotContainer.m_BallMechs.runHopper(0);
+    RobotContainer.m_BallMechs.upMotor.set(speed);
 
   }
 

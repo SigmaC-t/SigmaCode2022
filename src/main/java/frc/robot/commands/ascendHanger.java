@@ -22,13 +22,18 @@ public class ascendHanger extends CommandBase {
   @Override
   public void execute() {
 
-    RobotContainer.m_Hanger.ascendArms();
+    RobotContainer.m_Hanger.ascendArms(1);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+    RobotContainer.m_Hanger.hangL.set(0);
+    RobotContainer.m_Hanger.hangR.set(0);
+    
+  }
 
   // Returns true when the command should end.
   @Override

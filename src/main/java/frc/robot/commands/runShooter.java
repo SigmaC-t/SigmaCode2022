@@ -61,7 +61,7 @@ public class runShooter extends CommandBase {
 
        if (counter > 20){
 
-        System.out.println(RobotContainer.m_BallMechs.shooterEncoderTwo.getPosition());
+        System.out.println("+++++++++++++Shooter Encoder: " + RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity());
         RobotContainer.m_BallMechs.hopperMotor.set(-0.7);
         RobotContainer.m_BallMechs.indexerMotor.set(-0.7);
 

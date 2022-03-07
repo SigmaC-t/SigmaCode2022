@@ -29,7 +29,7 @@ public class AutoIntake extends CommandBase {
   @Override
   public void execute() {
 
-    RobotContainer.m_BallMechs.intakeBack(0.8, 0.8 , true);
+    RobotContainer.m_BallMechs.intakeBack(0.8, 0.8, 0.4, true);
     System.out.println("Intake is working");
     counter++;
 
@@ -39,7 +39,7 @@ public class AutoIntake extends CommandBase {
   @Override
   public void end(boolean interrupted) {
 
-    RobotContainer.m_BallMechs.intakeBack(0, 0, false);
+    RobotContainer.m_BallMechs.intakeBack(0, 0, 0, false);
     RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward); 
 
 

@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public PneumaticHub hub = new PneumaticHub();
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  
 
 
   private RobotContainer m_robotContainer;
@@ -48,7 +49,7 @@ public class Robot extends TimedRobot {
     //RobotContainer.m_BallMechs.counterBot.setUpSource(0);
     //RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
     //hub.enableCompressorDigital();
-    hub.enableCompressorAnalog(90, 105); // This is where it was 120 PSI.
+    hub.enableCompressorAnalog(90, 120); // This is where it was 120 PSI. was 105
     RobotContainer.m_drivetrain.gearShifter.set(Value.kForward);
    // RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
    // RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
@@ -113,6 +114,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    RobotContainer.m_Hanger.lENC.setPosition(0);
+    RobotContainer.m_Hanger.rENC.setPosition(0);
 
    // RobotContainer.m_BallMechs.ArmBringerUpperPnuematic.set(Value.kReverse);
 
@@ -129,7 +132,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+  
     //System.out.println(hub.getPressure(0));
     
     SmartDashboard.putNumber("Pressure", hub.getPressure(0));

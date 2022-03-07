@@ -15,12 +15,15 @@ import frc.robot.commands.BallMech;
 import frc.robot.commands.DriveTank;
 import frc.robot.commands.DriveToRange;
 import frc.robot.commands.Focus;
+import frc.robot.commands.HOMING;
+import frc.robot.commands.Outtake;
 import frc.robot.subsystems.BallMechs;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.SigmaSight;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.ascendHanger;
+import frc.robot.commands.delayedShooter;
 import frc.robot.commands.descendHanger;
 import frc.robot.commands.gearShift;
 import frc.robot.commands.lowerArms;
@@ -60,11 +63,17 @@ public class RobotContainer {
   Button leftTriggerButton = new Button(() -> driverController.getRawAxis(2) >= 0.5);
   Button rightTriggerButton = new Button(() -> driverController.getRawAxis(3) >= 0.5);
 
+  Button leftTriggerButtonOP = new Button(() -> operatorController.getRawAxis(2) >= 0.5);
+  Button rightTriggerButtonOP = new Button(() -> operatorController.getRawAxis(3) >= 0.5);
+
   Button dpadDownButton = new Button(() -> driverController.getPOV() == 180);
   Button dpadUpButton = new Button(() -> driverController.getPOV() == 0);
 
   Button dpadDownButtonOP = new Button(() -> operatorController.getPOV() == 180);
   Button dpadUpButtonOP = new Button(() -> operatorController.getPOV() == 0);
+  Button dpadRightButtonOP = new Button(() -> operatorController.getPOV() == 90);
+  Button dpadLeftButtonOP = new Button(() -> operatorController.getPOV() == 270);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -79,6 +88,7 @@ public class RobotContainer {
     
     rightTriggerButton.whenPressed(new runIntakeB(0.9, 0.8));
     rightTriggerButton.whenReleased(new StopIntake());
+
 
     
     //Intake Code
@@ -114,19 +124,21 @@ public class RobotContainer {
     m_buttonA.whenPressed(new runShooter(0.4));
     m_buttonA.whenReleased(new StopIntake());
 
+    m_rightBumper.whenPressed(new runShooter(0.85));
+
     //Automatic hopper
     //m_rightBumper.whenPressed(new AutoHopper());
 
-    m_rightBumper.whenHeld(new DriveToRange());
+    //m_rightBumper.whenHeld(new DriveToRange());
 
     //Run Hopper upwards
   
-    dpadDownButton.whileHeld(new runHopper(-0.4));
+    dpadDownButton.whileHeld(new runHopper(-0.8));
   // dpadDownButton.whenPressed(new runHopper(-0.4));
   // dpadDownButton.whenReleased(new StopIntake());
     
     //Run Hopper downwards
-    dpadUpButton.whileHeld(new runHopper(0.4));
+    dpadUpButton.whileHeld(new runHopper(0.8));
 
     //dpadUpButton.whenPressed(new runHopper(0.4));
    // dpadUpButton.whenReleased(new StopIntake());
@@ -135,27 +147,58 @@ public class RobotContainer {
    // m_leftBumper.whenPressed(new gearShift(true));
    // m_leftBumper.whenReleased(new gearShift(false));
 
-   m_buttonB.whenPressed(new runIntakeB(-0.9, -0.8));
-   m_buttonB.whenReleased(new StopIntake());
+  // m_buttonB.whenPressed(new runIntakeB(-0.9, -0.8));
+//  m_buttonB.whenReleased(new StopIntake());
+
+    m_buttonB.whenPressed(new Outtake());
+    m_buttonB.whenReleased(new StopIntake());
 
    m_buttonX.whenPressed(new runIntakeF(-0.9, -0.8)); 
    m_buttonX.whenReleased(new StopIntake());
 
-   o_buttonA.whenPressed(new lowerArms());
 
-   o_buttonY.whenPressed(new upperArms());
+   //****Operator Control */
+   dpadRightButtonOP.whenPressed(new lowerArms());
 
-   dpadDownButtonOP.whenPressed(new ascendHanger());
-   dpadDownButton.whenReleased(new stopHanger());
+   dpadLeftButtonOP.whenPressed(new upperArms());
 
-   dpadUpButtonOP.whenPressed(new descendHanger());
-   dpadUpButtonOP.whenReleased(new stopHanger());
+   dpadDownButtonOP.whileHeld(new descendHanger());
+  // dpadDownButton.whenReleased(new stopHanger());
 
-   o_buttonB.whenPressed(new runIntakeB(-0.9, -0.8));
-   o_buttonB.whenReleased(new StopIntake());
+   dpadUpButtonOP.whileHeld(new ascendHanger());
+   //dpadUpButtonOP.whenReleased(new stopHanger());
 
-   o_buttonX.whenPressed(new runIntakeF(-0.9, -0.8));
-   o_buttonX.whenReleased(new StopIntake());
+  // o_buttonB.whenPressed(new runIntakeF(-0.9, -0.8));
+   //o_buttonB.whenPressed(new Outtake());
+  // o_buttonB.whenReleased(new StopIntake());
+
+  o_buttonY.whenPressed(new runShooter(0.9));
+  o_buttonY.whenReleased(new StopIntake());
+
+  o_buttonB.whenPressed(new runShooter(0.95));
+  o_buttonB.whenReleased(new StopIntake());
+
+  o_buttonA.whenPressed(new runShooter(1));
+  o_buttonA.whenReleased(new StopIntake());
+
+
+  
+
+   //o_buttonX.whenPressed(new runIntakeB(-0.9, -0.8));
+   //o_buttonX.whenReleased(new StopIntake());
+
+   leftTriggerButtonOP.whileHeld(new runHopper(-0.8));
+   rightTriggerButtonOP.whileHeld(new runHopper(0.8));
+
+   o_rightBumper.whenPressed(new Outtake());
+   o_rightBumper.whenReleased(new StopIntake());
+
+   o_leftBumper.whenPressed(new delayedShooter());
+   o_leftBumper.whenPressed(new StopIntake());
+
+   o_buttonX.whileHeld(new HOMING());
+
+
 
     
 

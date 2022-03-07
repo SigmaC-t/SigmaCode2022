@@ -7,54 +7,48 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class Drivestraight extends CommandBase {
-  double speed;
-  /** Creates a new Drivestraight. */
-  public Drivestraight(double x) {
-    addRequirements(RobotContainer.m_drivetrain);
+public class delayedShooter extends CommandBase {
+  /** Creates a new delayedShooter. */
+  public delayedShooter() {
+    addRequirements(RobotContainer.m_BallMechs);
     // Use addRequirements() here to declare subsystem dependencies.
-    speed = x;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
-  int Counter = 0;
-
   @Override
   public void execute() {
-    System.out.println("Please work");
-    RobotContainer.m_drivetrain.auto(speed);
-    Counter++;
+    RobotContainer.m_BallMechs.shooter(-0.8);
+    RobotContainer.m_BallMechs.indexerMotor.set(-0.7);
 
-    /*if (Counter > 50){
-      RobotContainer.m_drivetrain.tankDrive(0, 0);
-    }
-    Counter++;
-    */
+
+    if (RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity() > 2000){
+
+      RobotContainer.m_BallMechs.hopperMotor.set(-0.7);
+
+    } else {
+
+    RobotContainer.m_BallMechs.hopperMotor.set(0);
+
   }
-  
+}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+    RobotContainer.m_BallMechs.shooter(0);
+    RobotContainer.m_BallMechs.hopperMotor.set(0);
+    RobotContainer.m_BallMechs.indexerMotor.set(0);
+
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Counter > 100){
-      
-      System.out.println("DriveStraight is finished");
-      return true;
-
-    } else {
-
-      return false;
-
-    }
+    return false;
   }
 }

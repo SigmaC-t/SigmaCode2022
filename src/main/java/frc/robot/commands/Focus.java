@@ -27,7 +27,7 @@ public class Focus extends CommandBase {
   @Override
   public void execute() {
 
-    RobotContainer.m_SigmaSight.Focus(RobotContainer.m_drivetrain);
+    /* RobotContainer.m_SigmaSight.Focus(RobotContainer.m_drivetrain);
     RobotContainer.m_SigmaSight.left_command = 0;
     RobotContainer.m_SigmaSight.right_command = 0;
     counter++;
@@ -38,7 +38,7 @@ public class Focus extends CommandBase {
 
     }
 
-
+    */
     
    /* double heading_error = limelight.xVal;
     limelight.steering_adjust = limelight.turnKp * limelight.xVal;
@@ -60,6 +60,8 @@ public class Focus extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    RobotContainer.m_SigmaSight.lineUpToShoot(RobotContainer.m_drivetrain);
 
     if (counter > 200){
 
