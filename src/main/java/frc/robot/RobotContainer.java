@@ -23,7 +23,7 @@ import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.SigmaSight;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.ascendHanger;
-import frc.robot.commands.delayedShooter;
+import frc.robot.commands.rpmShooter;
 import frc.robot.commands.descendHanger;
 import frc.robot.commands.gearShift;
 import frc.robot.commands.lowerArms;
@@ -172,11 +172,13 @@ public class RobotContainer {
    //o_buttonB.whenPressed(new Outtake());
   // o_buttonB.whenReleased(new StopIntake());
 
-  o_buttonY.whenPressed(new runShooter(0.9));
-  o_buttonY.whenReleased(new StopIntake());
+  o_buttonY.whileHeld(new DriveToRange());
+  //o_buttonY.whenReleased(new StopIntake());
 
-  o_buttonB.whenPressed(new runShooter(0.95));
-  o_buttonB.whenReleased(new StopIntake());
+  o_buttonB.whileHeld(new Focus());
+
+  // o_buttonB.whenPressed(new runShooter(0.95));
+  // o_buttonB.whenReleased(new StopIntake());
 
   o_buttonA.whenPressed(new runShooter(1));
   o_buttonA.whenReleased(new StopIntake());
@@ -187,14 +189,19 @@ public class RobotContainer {
    //o_buttonX.whenPressed(new runIntakeB(-0.9, -0.8));
    //o_buttonX.whenReleased(new StopIntake());
 
-   leftTriggerButtonOP.whileHeld(new runHopper(-0.8));
+   //leftTriggerButtonOP.whileHeld(new runHopper(-0.8));
    rightTriggerButtonOP.whileHeld(new runHopper(0.8));
+
+   leftTriggerButtonOP.whenPressed(new runHopper(-0.8));
 
    o_rightBumper.whenPressed(new Outtake());
    o_rightBumper.whenReleased(new StopIntake());
 
-   o_leftBumper.whenPressed(new delayedShooter());
-   o_leftBumper.whenPressed(new StopIntake());
+   //o_leftBumper.whileHeld(new rpmShooter(4350));
+   //o_leftBumper.whenPressed(new StopIntake());
+
+   o_leftBumper.whenPressed(new rpmShooter(4350));
+   o_leftBumper.whenReleased(new StopIntake());
 
    o_buttonX.whileHeld(new HOMING());
 

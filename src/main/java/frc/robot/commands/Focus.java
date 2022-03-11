@@ -61,7 +61,8 @@ public class Focus extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    RobotContainer.m_SigmaSight.lineUpToShoot(RobotContainer.m_drivetrain);
+    RobotContainer.m_SigmaSight.aimAndRange(RobotContainer.m_drivetrain);
+    //RobotContainer.m_SigmaSight.lineUpToShoot(RobotContainer.m_drivetrain);
 
     if (counter > 200){
 

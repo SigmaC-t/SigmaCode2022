@@ -10,7 +10,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class NavX extends SubsystemBase {
-  /** Creates a new navX. *//*
+  // Creates a new navX. 
   public AHRS AHRS;
   public double yaw, angle, pitch, roll;
 
@@ -40,5 +40,5 @@ public class NavX extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   
-  */
+  
 }

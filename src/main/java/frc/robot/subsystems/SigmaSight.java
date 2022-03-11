@@ -112,10 +112,10 @@ public class SigmaSight extends SubsystemBase {
             steering_adjust = turnKp * -xVal + minAimCommand;
         }
 
-        distance_adjust = distanceKP * (desiredArea - area);
+        distance_adjust = distanceKP * -yVal;
 
-        left_command = steering_adjust + distance_adjust * -1;
-        right_command = -steering_adjust + distance_adjust * -1;
+        left_command = -steering_adjust - distance_adjust * -1;
+        right_command = steering_adjust - distance_adjust * -1;
 
         System.out.println("leftSpeed: " + left_command);
         drivetrain.tankDrive(left_command, right_command);
