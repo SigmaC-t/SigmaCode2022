@@ -4,8 +4,12 @@ import java.util.concurrent.DelayQueue;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CAN;
@@ -33,9 +37,16 @@ public class BallMechs extends SubsystemBase{
 
     public static CANSparkMax upMotor = new CANSparkMax(15, MotorType.kBrushed);
 
+    private SparkMaxPIDController shooterPID;
+    public RelativeEncoder shooterENC;
     private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushless); //Change kBrushed back to kBrushless after testing
     private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushless);
 
+    private double kP, kI, kD, kIz, kMaxOutput, kMinOutput, maxRPM, kFF;
+
+    public int highRPM = 4350;
+
+    public int ballCount;
     double HopperSpeed = 0.4;
     //toggle hopper 
     //11, 4 = BACK
@@ -46,9 +57,6 @@ public class BallMechs extends SubsystemBase{
     //public static RelativeEncoder shooterEncoder = shooterMotor.getEncoder();
     //public static 
     public RelativeEncoder shooterEncoderTwo = shooterMotorTwo.getEncoder();
-    
-    public static PneumaticHub hub = new PneumaticHub();
-    double pressure;
 
     //Initialization of Hopper Motors\[]
 
@@ -57,15 +65,7 @@ public class BallMechs extends SubsystemBase{
 
     //Initialization of Cylinders 
      public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.REVPH, 11, 4); // 11, 4
-     //public DoubleSolenoid ArmBringerUpperFr = new DoubleSolenoid(PneumaticsModuleType.REVPH, 2, 3);
      public DoubleSolenoid ArmBringerUpperB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 3); // 12, 3
-     //public DoubleSolenoid ArmBringerUpperBa = new DoubleSolenoid(PneumaticsModuleType.REVPH , 6, 7);
-
-
-
-
-    //public Ultrasonic ballSensor_hopper = new Ultrasonic(3, 4);
-    //public AnalogPotentiometer BallSensor = new AnalogPotentiomete`r(1);
 
     //Initialization of IR Sensors
     //Digital Input class used to get a simple boolean value from the IR sensors.
@@ -78,10 +78,36 @@ public class BallMechs extends SubsystemBase{
 
 
     
-    public void BallMech()
+    public BallMechs()
 	{
-		intakeMotorF.setIdleMode(IdleMode.kBrake);
+		intakeMotorF.setIdleMode(IdleMode.kCoast);
+        intakeMotorB.setIdleMode(IdleMode.kCoast);
         hopperMotor.setIdleMode(IdleMode.kBrake);
+        upMotor.setIdleMode(IdleMode.kBrake);
+
+        shooterPID = shooterMotorTwo.getPIDController();
+        shooterENC = shooterMotorTwo.getEncoder();
+
+        kP = 0.000000081036 * 2; //0.090966;
+        kI = 0;
+        kD = 0;
+        kIz = 0;
+        kFF = 0.0044631 / 25.05; // new SimpleMotorFeedforward(0.1277, 0.1258, 0.0044631); // kS, kV, kA
+        
+        kMaxOutput = 1;
+        kMinOutput = -1;
+        maxRPM = 5700;
+        
+        shooterPID.setP(kP);
+        shooterPID.setI(kI);
+        shooterPID.setD(kD);
+        shooterPID.setIZone(kIz);
+        shooterPID.setFF(kFF);
+        shooterPID.setOutputRange(kMinOutput, kMaxOutput);
+
+        shooterMotor.setIdleMode(IdleMode.kBrake);
+        shooterMotorTwo.setIdleMode(IdleMode.kBrake);
+
 	}
 
 
@@ -90,21 +116,18 @@ public class BallMechs extends SubsystemBase{
     public void intakeFront(double speed, double hopper, double upSpeed, boolean extend){
 
        
+            if (!sensorBot.get()){
+
+                //BallCount;
+
+            }
 
             ArmBringerUpperF.set(Value.kForward);
             intakeMotorF.set(-speed);
-
-      // if (sensorBot.get()){
             runHopper(hopper);
             upMotor.set(upSpeed);
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 
-    //  } else if (!sensorBot.get()){
-
-     //  runHopper(0);
-     //   upMotor.set(0);
-
-   //   } 
 
 
     }
@@ -121,18 +144,9 @@ public class BallMechs extends SubsystemBase{
 
         System.out.println(ArmBringerUpperB.get());
 
-     //  if (sensorBot.get()){
 
             upMotor.set(upSpeed);
             runHopper(hopper);
-
-
-     //  } else if (!sensorBot.get()){
-
-           // upMotor.set(0);
-           // runHopper(0);
-   
-     //   }
 
         ArmBringerUpperB.set(Value.kReverse);
         intakeMotorB.set(-speed);
@@ -155,6 +169,15 @@ public class BallMechs extends SubsystemBase{
            }
        }
 
+
+    public void rpmShooter(double RPM){
+
+        //System.out.println("FF: " );
+        shooterPID.setReference(-RPM, ControlType.kVelocity);
+        shooterMotor.follow(shooterMotorTwo, true);
+        System.out.println("shooterENC: " + shooterENC.getVelocity());
+
+    }
 
   //Add code to integrate limelight with shooting. 
     public void shooter (double speed){
