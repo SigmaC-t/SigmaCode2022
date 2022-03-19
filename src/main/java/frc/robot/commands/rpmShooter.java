@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
 public class rpmShooter extends CommandBase {
-  int RPM;
+  double RPM;
   int counter = 0;
   int indexerCounter = 0;
   int shootAnyways = 0;
   int reset;
   int wait;
-  double hopperSpeed = 0.7;
+  double hopperSpeed = 0.8;
   boolean end;
   String correctColor = SmartDashboard.getString("Alliance Color: ", "Blue");
   String wrongColor = "Red";
@@ -23,7 +23,6 @@ public class rpmShooter extends CommandBase {
   /** Creates a new delayedShooter. */
   public rpmShooter(int x) {
     addRequirements(RobotContainer.m_BallMechs);
-    RPM = x;
   }
 
   // Called when the command is initially scheduled.
@@ -39,6 +38,7 @@ public class rpmShooter extends CommandBase {
   @Override
   public void execute() {
 
+    RPM = SmartDashboard.getNumber("RPM", 4100);
 
   //Start spinning the flywheel.
       RobotContainer.m_BallMechs.rpmShooter(RPM);
@@ -61,7 +61,7 @@ public class rpmShooter extends CommandBase {
 
       if (RobotContainer.m_BallMechs.sensorBot.get()){
 
-        RobotContainer.m_BallMechs.runHopper(-1);
+        RobotContainer.m_BallMechs.runHopper(-0.5);
 
       } else {
 
@@ -83,7 +83,6 @@ public class rpmShooter extends CommandBase {
       case 0: 
 
       if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) > 200){
-
         System.out.println("Waiting for RPM: " + shootAnyways);
         shootAnyways++;
 
@@ -97,7 +96,7 @@ public class rpmShooter extends CommandBase {
         if (RobotContainer.m_BallMechs.ballCount == 1){
           wait++;
 
-          if (wait > 20){
+          if (wait > 30){
           RobotContainer.m_BallMechs.runHopper(hopperSpeed);
           RobotContainer.m_BallMechs.ballCount = 0;
           }
@@ -155,6 +154,7 @@ public class rpmShooter extends CommandBase {
 
         hopperState = 0;
         reset++;
+        System.out.println("Reset " + reset);
 
 
       }

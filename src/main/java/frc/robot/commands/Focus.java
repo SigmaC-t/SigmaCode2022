@@ -27,6 +27,10 @@ public class Focus extends CommandBase {
   @Override
   public void execute() {
 
+    RobotContainer.m_SigmaSight.lineUpToShoot(RobotContainer.m_drivetrain);
+    RobotContainer.m_SigmaSight.left_command = 0;
+    RobotContainer.m_SigmaSight.right_command = 0;
+
     /* RobotContainer.m_SigmaSight.Focus(RobotContainer.m_drivetrain);
     RobotContainer.m_SigmaSight.left_command = 0;
     RobotContainer.m_SigmaSight.right_command = 0;

@@ -193,10 +193,12 @@ double turnKP = 0.008;
     System.out.println("Throttling High Gear");
      
    } else {
+
     differentialDrive.tankDrive(-left, -right);
 
     leftLimiter.calculate(left * 0.3);
     rightLimiter.calculate(right * 0.3);
+    
    }
   }
     
@@ -216,12 +218,12 @@ double turnKP = 0.008;
 
   if (gearShifter.get() == Value.kForward){
 
-    differentialDrive.arcadeDrive(-leftLimiter.calculate(forward), -rightLimiter.calculate(turn));
+    differentialDrive.arcadeDrive(-leftLimiter.calculate(forward), rightLimiter.calculate(turn) * 0.5, false);
     System.out.println("Throttling High Gear");
      
    } else {
 
-    differentialDrive.arcadeDrive(-forward, -turn);
+    differentialDrive.arcadeDrive(-forward, turn, false);
 
     leftLimiter.calculate(forward * 0.3);
     rightLimiter.calculate(turn * 0.3);

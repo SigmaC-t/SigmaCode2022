@@ -25,8 +25,8 @@ public class DriveTank extends CommandBase {
   @Override
   public void execute() {
     double left = RobotContainer.driverController.getRawAxis(Constants.DRIVER_CONTROLLER_MOVE_AXIS);
-    double right = RobotContainer.driverController.getRawAxis(Constants.DRIVER_CONTROLLER_ROTATE_AXIS);
-    RobotContainer.m_drivetrain.tankDrive(left, right); 
+    double right = RobotContainer.driverController.getRawAxis(4);//Constants.DRIVER_CONTROLLER_ROTATE_AXIS);
+    RobotContainer.m_drivetrain.arcadeDrive(left, right); 
 
   }
 

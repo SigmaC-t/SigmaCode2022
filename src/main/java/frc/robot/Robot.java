@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    m_autonomousCommand =  RobotContainer.m_drivetrain.getAutonomousCommand(); // BasicAuto();
+    m_autonomousCommand = new BasicAuto(); //RobotContainer.m_drivetrain.getAutonomousCommand(); // 
    // RobotContainer.navX.resetAngle();
 
     // schedule the autonomous command (exampl'e)

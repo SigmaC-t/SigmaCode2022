@@ -14,6 +14,6 @@ public class FocusShoot extends ParallelCommandGroup {
   public FocusShoot() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Focus(), new rpmShooter(4350));
+    addCommands(new Focus(), new dumbShooter());
   }
 }

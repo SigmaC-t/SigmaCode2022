@@ -29,6 +29,7 @@ import frc.robot.commands.StopIntake;
 import frc.robot.commands.ascendHanger;
 import frc.robot.commands.rpmShooter;
 import frc.robot.commands.descendHanger;
+import frc.robot.commands.dumbShooter;
 import frc.robot.commands.gearShift;
 import frc.robot.commands.lowerArms;
 import frc.robot.commands.runHopper;
@@ -122,7 +123,10 @@ public class RobotContainer {
     //m_buttonA.whenHeld(new DriveToRange());
 
     //High Goal Shooting
-    m_buttonY.whenPressed(new rpmShooter(4350)); //wAS 0.8
+    // m_buttonY.whenPressed(new rpmShooter(4350)); //wAS 0.8
+    // m_buttonY.whenReleased(new StopIntake());
+
+    m_buttonY.whenPressed(new ShooterSequence());
     m_buttonY.whenReleased(new StopIntake());
 
     //Low Goal Shooting
@@ -208,7 +212,7 @@ public class RobotContainer {
    //o_leftBumper.whileHeld(new rpmShooter(4350));
    //o_leftBumper.whenPressed(new StopIntake());
 
-   o_leftBumper.whenPressed(new rpmShooter(4350));
+   o_leftBumper.whenPressed(new dumbShooter());
    o_leftBumper.whenReleased(new StopIntake());
 
    o_buttonX.whileHeld(new HOMING());
