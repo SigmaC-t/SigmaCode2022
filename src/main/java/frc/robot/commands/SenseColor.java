@@ -4,29 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.trajectory.*;
-
-import java.util.List;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.ColorSensor;
 
-public class AutoPathFollow extends CommandBase {
-  
-
-        
-   /** Creates a new AutoPathFollow. */
-  public AutoPathFollow() {
-    addRequirements(RobotContainer.m_drivetrain);
+public class SenseColor extends CommandBase {
+  /** Creates a new SenseColor. */
+  public SenseColor() {
+    addRequirements(RobotContainer.m_ColorSensor);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -36,8 +21,12 @@ public class AutoPathFollow extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
 
+    System.out.println("The color is " + RobotContainer.m_ColorSensor.detectColor());
+
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override

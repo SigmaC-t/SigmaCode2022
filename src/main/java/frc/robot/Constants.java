@@ -48,7 +48,7 @@ public final class Constants {
 
     //Limelight Constants09
     public static final double TURN_KP = -0.03;
-    public static final double MIN_AIM_COMMAND = 0.0001;
+    public static final double MIN_AIM_COMMAND = 0.2;
     public static final double DISTANCE_KP = -0.05; // was -0.1
 
     //11, 4 = BACK
@@ -61,16 +61,16 @@ public final class Constants {
 
     //Ramsete Controller Constants
     //Need to change values below after System Identification tests
-    public static final double ksVolts = 0;
-    public static final double kvVoltSecondsPerMeter = 0; //Change the units according to the measurement of wheels
-    public static final double kaVoltSecondsSquaredPerMeter = 0; 
+    public static final double ksVolts = 0.27737;
+    public static final double kvVoltSecondsPerMeter = 3.6926; //Change the units according to the measurement of wheels
+    public static final double kaVoltSecondsSquaredPerMeter = 0.42827; 
 
-    public static final double kPDriveVel = 0;
-    public static final double kTrackWidthMeter = 0;
+    public static final double kPDriveVel = 4.6575;
+    public static final double kTrackWidthMeter = .8; // Properly characterize
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeter);
 
-    public static final double kMaxSpeedMetersPerSecond = 0;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0;
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
     //Works well for most robots
     public static final double kRamseteB = 2;

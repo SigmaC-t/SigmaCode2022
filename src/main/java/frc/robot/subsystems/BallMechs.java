@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -43,6 +44,8 @@ public class BallMechs extends SubsystemBase{
     private static CANSparkMax shooterMotorTwo = new CANSparkMax(Constants.SHOOTER_MOTOR_TWO, MotorType.kBrushless);
 
     private double kP, kI, kD, kIz, kMaxOutput, kMinOutput, maxRPM, kFF;
+
+    public boolean ball;
 
     public int highRPM = 4350;
 
@@ -116,10 +119,21 @@ public class BallMechs extends SubsystemBase{
     public void intakeFront(double speed, double hopper, double upSpeed, boolean extend){
 
        
-            if (!sensorBot.get()){
+            if (!sensorBot.get() && !ball){
 
-                //BallCount;
+                ballCount = 1;
+                System.out.println("Ball Count: " + ballCount);
 
+            } else if (ballCount == 1 && sensorBot.get()){
+
+                System.out.println("Awaiting Second Ball");
+                ball = true;
+                
+            } else if (ball && !sensorBot.get()){
+
+                System.out.println("Ball Count: " + ballCount);
+                ballCount = 2;
+                
             }
 
             ArmBringerUpperF.set(Value.kForward);
@@ -140,6 +154,23 @@ public class BallMechs extends SubsystemBase{
     }
     
     public void intakeBack(double speed, double hopper, double upSpeed, boolean extend){
+
+        if (!sensorBot.get() && !ball){
+
+            ballCount = 1;
+            System.out.println("Ball Count: " + ballCount);
+
+        } else if (ballCount == 1 && sensorBot.get()){
+
+            System.out.println("Awaiting Second Ball");
+            ball = true;
+            
+        } else if (ball && !sensorBot.get()){
+
+            System.out.println("Ball Count: " + ballCount);
+            ballCount = 2;
+            
+        }
 
 
         System.out.println(ArmBringerUpperB.get());
@@ -172,10 +203,13 @@ public class BallMechs extends SubsystemBase{
 
     public void rpmShooter(double RPM){
 
+       // SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter);
         //System.out.println("FF: " );
         shooterPID.setReference(-RPM, ControlType.kVelocity);
         shooterMotor.follow(shooterMotorTwo, true);
         System.out.println("shooterENC: " + shooterENC.getVelocity());
+        //shooterPID.setFF(feedForward.calculate((RPM/60), (RPM - shooterENC.getVelocity() / 60)) / RobotController.getBatteryVoltage());
+
 
     }
 

@@ -202,6 +202,9 @@ if (rENC.getPosition() > minPosition){
   //   }
   // }
 
+    //Add a encoder position requirement to pneumatically deploying arm. 
+
+
   int hangState = 0;
   int counter = 0;
   public void autoClimb(){

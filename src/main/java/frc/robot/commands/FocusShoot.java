@@ -4,17 +4,16 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ShooterSequence extends SequentialCommandGroup {
-  /** Creates a new ShooterSequence. */
-  public ShooterSequence() {
-    System.out.println("Doing Shooter Sequence");
+public class FocusShoot extends ParallelCommandGroup {
+  /** Creates a new FocusShoot. */
+  public FocusShoot() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Focus(), new FocusShoot());
+    addCommands(new Focus(), new rpmShooter(4350));
   }
 }

@@ -46,8 +46,8 @@ public class runHopper extends CommandBase {
       
       // System.out.println("running Hopper");
     
-        // RobotContainer.m_BallMechs.runHopper(speed);
-        // RobotContainer.m_BallMechs.upMotor.set(speed);
+        RobotContainer.m_BallMechs.runHopper(speed);
+        RobotContainer.m_BallMechs.upMotor.set(speed);
         // counter++;
 
 
@@ -59,9 +59,6 @@ public class runHopper extends CommandBase {
 
     RobotContainer.m_BallMechs.runHopper(0);
     RobotContainer.m_BallMechs.upMotor.set(speed);
-    RobotContainer.m_BallMechs.shooter(0);
-      RobotContainer.m_BallMechs.indexerMotor.set(0);
-    counter = 0;
 
   }
 

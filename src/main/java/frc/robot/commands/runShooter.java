@@ -36,17 +36,6 @@ public class runShooter extends CommandBase {
     //\
     //speed .8 is ideal for shooting in the top hub. 
     /*
-    if (RobotContainer.driverController.getRawAxis(3) > .05){
-       speed = -RobotContainer.driverController.getRawAxis(3);
-       System.out.println("The negative");
-
-    }
-
-    if (RobotContainer.driverController.getRawAxis(2) > .05){
-      speed = RobotContainer.driverController.getRawAxis(2);
-      System.out.println("The positive");
-    }
-    */
 
     //Make sure all balls are out by detecting top sensor changing values. 
     //Once top sensor has changed value X amount of times, stop motors
@@ -59,19 +48,15 @@ public class runShooter extends CommandBase {
     RobotContainer.m_BallMechs.indexerMotor.set(-speed);
 
      if (RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity() * -1 >= 4310){
-       counter++;
-        System.out.println("+++++++++++++Shooter Encoder: " + RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity());
-        new runHopper(0.8);
-        //RobotContainer.m_BallMechs.hopperMotor.set(-0.7);
+        counter++;
+
+        if (counter > 20){
+        RobotContainer.m_BallMechs.hopperMotor.set(-0.7);
+        }
 
        
       }
        
-
-    //  }
-     // RobotContainer.m_BallMechs.shooter(-speed);
-      System.out.println(RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity());
-  //  }
    
     
 

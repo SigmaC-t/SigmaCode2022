@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -50,7 +51,7 @@ public class Robot extends TimedRobot {
     //RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
     //hub.enableCompressorDigital();
     hub.enableCompressorAnalog(90, 120); // This is where it was 120 PSI. was 105
-    RobotContainer.m_drivetrain.gearShifter.set(Value.kForward);
+    RobotContainer.m_drivetrain.gearShifter.set(Value.kReverse); //kReverse is low gear
    // RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
    // RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
     
@@ -89,7 +90,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    m_autonomousCommand =  new BasicAuto();
+    m_autonomousCommand =  RobotContainer.m_drivetrain.getAutonomousCommand(); // BasicAuto();
    // RobotContainer.navX.resetAngle();
 
     // schedule the autonomous command (exampl'e)
@@ -117,6 +118,10 @@ public class Robot extends TimedRobot {
     RobotContainer.m_Hanger.lENC.setPosition(0);
     RobotContainer.m_Hanger.rENC.setPosition(0);
 
+    
+    RobotContainer.m_drivetrain.getRightEncoder().setPosition(0);
+    RobotContainer.m_drivetrain.getLeftEncoder().setPosition(0);
+
    // RobotContainer.m_BallMechs.ArmBringerUpperPnuematic.set(Value.kReverse);
 
     // This makes sure that the autonomous stops running when
@@ -134,7 +139,9 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
   
     //System.out.println(hub.getPressure(0));
-    
+    // System.out.println("Left: " + RobotContainer.m_drivetrain.getLeftEncoder().getPosition());
+    // System.out.println("Right " + RobotContainer.m_drivetrain.getRightEncoder().getPosition());
+
     SmartDashboard.putNumber("Pressure", hub.getPressure(0));
 
 

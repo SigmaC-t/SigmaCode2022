@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,7 +18,10 @@ import frc.robot.commands.DriveToRange;
 import frc.robot.commands.Focus;
 import frc.robot.commands.HOMING;
 import frc.robot.commands.Outtake;
+import frc.robot.commands.SenseColor;
+import frc.robot.commands.ShooterSequence;
 import frc.robot.subsystems.BallMechs;
+import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hanger;
 import frc.robot.subsystems.SigmaSight;
@@ -50,6 +54,7 @@ public class RobotContainer {
   public static final BallMechs m_BallMechs = new BallMechs();
   public static final SigmaSight m_SigmaSight = new SigmaSight();
   public static final Hanger m_Hanger = new Hanger();
+  public static final ColorSensor m_ColorSensor = new ColorSensor();
   public static JoystickButton m_buttonA, m_buttonB, m_buttonX, m_buttonXRaw, m_buttonY, m_leftBumper, m_leftBumperReleased, m_rightBumper, m_leftStick, m_rightStick, o_buttonBReleased;
   public static double m_leftTrigger, m_leftAnalogX, m_rightAnalogX, m_leftAnalogY, m_rightAnalogY;
   double m_rightTrigger;
@@ -83,10 +88,10 @@ public class RobotContainer {
     m_BallMechs.setDefaultCommand(new StopIntake());
     m_Hanger.setDefaultCommand(new stopHanger());
 
-    leftTriggerButton.whenPressed(new runIntakeF(0.9, 0.8));
+    leftTriggerButton.whenPressed(new runIntakeF(0.9, 1));
     leftTriggerButton.whenReleased(new StopIntake());
     
-    rightTriggerButton.whenPressed(new runIntakeB(0.9, 0.8));
+    rightTriggerButton.whenPressed(new runIntakeB(0.9, 1));
     rightTriggerButton.whenReleased(new StopIntake());
 
 
@@ -117,7 +122,7 @@ public class RobotContainer {
     //m_buttonA.whenHeld(new DriveToRange());
 
     //High Goal Shooting
-    m_buttonY.whenPressed(new runShooter(0.8)); //wAS 0.8
+    m_buttonY.whenPressed(new rpmShooter(4350)); //wAS 0.8
     m_buttonY.whenReleased(new StopIntake());
 
     //Low Goal Shooting
@@ -153,7 +158,7 @@ public class RobotContainer {
     m_buttonB.whenPressed(new Outtake());
     m_buttonB.whenReleased(new StopIntake());
 
-   m_buttonX.whenPressed(new runIntakeF(-0.9, -0.8)); 
+   m_buttonX.whenPressed(new runIntakeF(-0.9, -1)); 
    m_buttonX.whenReleased(new StopIntake());
 
 
@@ -169,10 +174,14 @@ public class RobotContainer {
    //dpadUpButtonOP.whenReleased(new stopHanger());
 
   // o_buttonB.whenPressed(new runIntakeF(-0.9, -0.8));
+   //
+   
    //o_buttonB.whenPressed(new Outtake());
   // o_buttonB.whenReleased(new StopIntake());
 
-  o_buttonY.whileHeld(new DriveToRange());
+  o_buttonY.whenPressed(new ShooterSequence());
+  o_buttonY.whenReleased(new StopIntake());
+  
   //o_buttonY.whenReleased(new StopIntake());
 
   o_buttonB.whileHeld(new Focus());
@@ -180,9 +189,8 @@ public class RobotContainer {
   // o_buttonB.whenPressed(new runShooter(0.95));
   // o_buttonB.whenReleased(new StopIntake());
 
-  o_buttonA.whenPressed(new runShooter(1));
-  o_buttonA.whenReleased(new StopIntake());
-
+  
+  o_buttonA.whileHeld(new SenseColor());
 
   
 
@@ -291,4 +299,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+
+  
 }

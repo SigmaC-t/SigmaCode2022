@@ -49,6 +49,7 @@ public class Focus extends CommandBase {
     RobotContainer.m_drivetrain.tankDrive(limelight.left_command, limelight.right_command);
     System.out.println("Adjusting Aim");
     */
+    counter++;
   }
 
   // Called once the command ends or is interrupted.
@@ -61,15 +62,20 @@ public class Focus extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    RobotContainer.m_SigmaSight.aimAndRange(RobotContainer.m_drivetrain);
-    //RobotContainer.m_SigmaSight.lineUpToShoot(RobotContainer.m_drivetrain);
-
-    if (counter > 200){
+    //RobotContainer.m_SigmaSight.aimAndRange(RobotContainer.m_drivetrain);
+    if (RobotContainer.m_SigmaSight.lineUpToShoot(RobotContainer.m_drivetrain)){
 
       return true;
 
-    }
+    } 
 
-    return false;
+    if (counter > 25){
+
+      return true;
+
   }
+
+  return false;
+
+}
 }
