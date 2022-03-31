@@ -47,7 +47,7 @@ public class BallMechs extends SubsystemBase{
 
     public boolean ball;
 
-    public int highRPM = 4350;
+    public int highRPM = 3900;
 
     public int ballCount;
     double HopperSpeed = 0.4;
@@ -90,11 +90,11 @@ public class BallMechs extends SubsystemBase{
         shooterPID = shooterMotorTwo.getPIDController();
         shooterENC = shooterMotorTwo.getEncoder();
 
-        kP = 0.000000081036 * 2; // 0.000025000; //0.000000081036 * 2; //0.090966;
-        kI = 0.000000000000001;
+        kP = SmartDashboard.getNumber("P", 0.000060); //0.000000081036 * 2; // 0.000025000; //0.000000081036 * 2; //0.090966;
+        kI = 0.00000045;//75; // SmartDashboard.getNumber("I", 0);  // 0.000000000000001;
         kD = 0;
-        kIz = 0;
-        kFF = 0.0044631 / 25.05; // new SimpleMotorFeedforward(0.1277, 0.1258, 0.0044631); // kS, kV, kA
+        kIz = 350;
+        kFF = SmartDashboard.getNumber("FF", 0.000172); //0.0044631 / 25.05; // new SimpleMotorFeedforward(0.1277, 0.1258, 0.0044631); // kS, kV, kA
         
         kMaxOutput = 1;
         kMinOutput = -1;
@@ -114,7 +114,8 @@ public class BallMechs extends SubsystemBase{
         shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterMotorTwo.setIdleMode(IdleMode.kBrake);
 
-        SmartDashboard.putNumber("RPM", 4100);
+        SmartDashboard.putNumber("RPM", 3900);
+        SmartDashboard.putNumber("Ball Count", ballCount);
 
 	}
 

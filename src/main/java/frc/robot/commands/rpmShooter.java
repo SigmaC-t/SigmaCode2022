@@ -30,6 +30,7 @@ public class rpmShooter extends CommandBase {
   public void initialize() {
 
     indexerCounter = 0;
+    RobotContainer.m_BallMechs.ballCount = 2;
     System.out.println("Base Counter: " + counter);
 
   }
@@ -38,7 +39,7 @@ public class rpmShooter extends CommandBase {
   @Override
   public void execute() {
 
-    RPM = SmartDashboard.getNumber("RPM", 4100);
+    RPM = SmartDashboard.getNumber("RPM", 3900);
 
   //Start spinning the flywheel.
       RobotContainer.m_BallMechs.rpmShooter(RPM);
@@ -72,8 +73,7 @@ public class rpmShooter extends CommandBase {
 
       RobotContainer.m_BallMechs.indexerMotor.set(-1);
 
-    }
-
+    
 
 
     // Switch state controls the pulse length of the hopper. 
@@ -82,11 +82,11 @@ public class rpmShooter extends CommandBase {
 
       case 0: 
 
-      if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) > 200){
-        System.out.println("Waiting for RPM: " + shootAnyways);
-        shootAnyways++;
+      // if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) > 200){
+      //   System.out.println("Waiting for RPM: " + shootAnyways);
+      //   shootAnyways++;
 
-      }
+      // }
 
       if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) < 200){
 
@@ -163,7 +163,7 @@ public class rpmShooter extends CommandBase {
 
     }
   }
-
+  }
     
   
   // Called once the command ends or is interrupted.
@@ -176,6 +176,8 @@ public class rpmShooter extends CommandBase {
     RobotContainer.m_BallMechs.shooter(0);
     RobotContainer.m_BallMechs.hopperMotor.set(0);
     RobotContainer.m_BallMechs.indexerMotor.set(0);
+    indexerCounter = 0;
+    reset = 0;
 
   }
 

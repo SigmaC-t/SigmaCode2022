@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import java.sql.Time;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -15,7 +13,7 @@ public class dumbShooter extends CommandBase {
   int counter = 0;
   int indexerCounter = 0;
   int shootAnyways = 0;
-  double RPM = 4100;
+  double RPM = 3900;
   /** Creates a new dumbShooter. */
   public dumbShooter() {
     addRequirements(RobotContainer.m_BallMechs);
@@ -27,6 +25,8 @@ public class dumbShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    shootAnyways = 0;
 
     Timer time = new Timer();
 
@@ -40,7 +40,7 @@ public class dumbShooter extends CommandBase {
 
     counter++;
 
-    RPM = SmartDashboard.getNumber("RPM", 4100);
+    RPM = SmartDashboard.getNumber("RPM", 3900);
 
     RobotContainer.m_BallMechs.rpmShooter(RPM);
 
@@ -64,15 +64,17 @@ public class dumbShooter extends CommandBase {
 
     }
 
-  if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) > 200){
+  if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) > 100){
 
     shootAnyways++;
+    //System.out.println("Incrementing Shoot Anyways " + shootAnyways);
     
   }
 
-  if (indexerCounter > 20 && (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) < 200)){
+  if (indexerCounter > 20 && (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) < 50)){
     //Ball is there
     if (!RobotContainer.m_BallMechs.sensorTop.get()){
+      Timer.delay(0.1);
       RobotContainer.m_BallMechs.runHopper(0);
       System.out.println("Stopping the Hopper");
       Timer.delay(.3);
@@ -81,21 +83,21 @@ public class dumbShooter extends CommandBase {
     //Ball is not there
     } else {
 
-      RobotContainer.m_BallMechs.runHopper(1);
+      RobotContainer.m_BallMechs.runHopper(.7);
       System.out.println("No ball at top");
 
     }
 
-  } else if (indexerCounter > 20 && shootAnyways > 50){
+  // } else if (indexerCounter > 20 && shootAnyways > 100){
 
-    RobotContainer.m_BallMechs.runHopper(1);
-    System.out.println("Shooting Anyways");
+  //   RobotContainer.m_BallMechs.runHopper(1);
+  //   System.out.println("Shooting Anyways");
 
-  }
+   }
 
 
 
-  }
+   }
 
  // 333 334 335
   // Called once the command ends or is interrupted.
@@ -115,7 +117,7 @@ public class dumbShooter extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    if (counter > 100){
+    if (counter > 200){
 
       return true; 
 
