@@ -26,6 +26,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -33,6 +34,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
@@ -85,6 +87,7 @@ private final double ENC_TICKS_PER_INCH = 0; //Calculate Encoder ticks per inch
 
 public double rampRate = 0.1;
 
+private final Field2d m_field = new Field2d();
 
 //Variables for NavX (Gyroscope)
 double turnKP = 0.008;
@@ -154,8 +157,6 @@ double turnKP = 0.008;
     //Instantiated Differential Drive that manipulates the MotorGroups (Left and Right side of robot)
     differentialDrive = new DifferentialDrive(left, right);
 
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
-
     leftMaster.setIdleMode(IdleMode.kCoast);
     leftSlave.setIdleMode(IdleMode.kCoast);
     leftSlave2.setIdleMode(IdleMode.kCoast);
@@ -170,8 +171,6 @@ double turnKP = 0.008;
     rightSlave.setSmartCurrentLimit(35);
     rightSlave2.setSmartCurrentLimit(35);
 
-    //leftMaster.setOpenLoopRampRate(0.1)
-
     leftMaster.burnFlash();
     leftSlave.burnFlash();
     leftSlave2.burnFlash();
@@ -179,7 +178,12 @@ double turnKP = 0.008;
     rightSlave.burnFlash();
     rightSlave2.burnFlash();
 
+    resetEncoders();
  
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+
+    SmartDashboard.putData("FIeld", m_field);
+    
 
   }
 
@@ -236,11 +240,16 @@ double turnKP = 0.008;
  @Override
  public void periodic() {
    m_odometry.update(
-   m_gyro.getRotation2d(), nativeUnitsToDistanceMeters(leftENC.getPosition()), nativeUnitsToDistanceMeters(rightENC.getPosition()));
+   m_gyro.getRotation2d(), -nativeUnitsToDistanceMeters(leftENC.getPosition()), -nativeUnitsToDistanceMeters(-rightENC.getPosition()));
 
-  // SmartDashboard.putNumber("Left Motor 1", leftMaster.getOutputCurrent());
-  // SmartDashboard.putNumber("Left Motor 2", leftSlave.getOutputCurrent());
-  // SmartDashboard.putNumber("Left Motor 3", leftSlave2.getOutputCurrent());
+   var translation = m_odometry.getPoseMeters().getTranslation();
+   SmartDashboard.putNumber("X", translation.getX());
+   SmartDashboard.putNumber("Y", translation.getY());
+   SmartDashboard.putNumber("Left Encoder", leftENC.getPosition());
+   SmartDashboard.putNumber("Right Encoder", rightENC.getPosition());
+   SmartDashboard.putNumber("Angle", m_gyro.getYaw());
+   m_field.setRobotPose(m_odometry.getPoseMeters());
+   
 
    // This method will be called once per scheduler run
  }
@@ -252,7 +261,7 @@ double turnKP = 0.008;
  }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-   return new DifferentialDriveWheelSpeeds(velocityToMetersPerSeconds(leftENC.getVelocity()), velocityToMetersPerSeconds(rightENC.getVelocity()));
+   return new DifferentialDriveWheelSpeeds(velocityToMetersPerSeconds(-leftENC.getVelocity()), velocityToMetersPerSeconds(rightENC.getVelocity()));
 
  }
 
@@ -299,7 +308,7 @@ double turnKP = 0.008;
  }
 
  public double nativeUnitsToDistanceMeters(double sensorCounts){
-  double motorRotations = (double)sensorCounts;
+  double motorRotations = sensorCounts;
   double wheelRotations = motorRotations / (gearRatio);
   double positionMeters = wheelRotations * 0.319024;
 
@@ -318,7 +327,7 @@ double turnKP = 0.008;
 
  }
 
- public Command getAutonomousCommand (){
+ public Command getAutonomousCommand (Trajectory trajectory){
 
   var autoVoltageConstraint =
   new DifferentialDriveVoltageConstraint(
@@ -327,23 +336,62 @@ double turnKP = 0.008;
     10
  );
 
+ var table = NetworkTableInstance.getDefault().getTable("troubleshooting");
+ var leftReference = table.getEntry("left_reference");
+ var leftMeasurement = table.getEntry("left_measurement");
+ var rightReference = table.getEntry("right_reference");
+ var rightMeasurement = table.getEntry("right_measurement");
+
+
+var leftController = new PIDController(Constants.kPDriveVel, 0 , 0);
+var rightController = new PIDController(Constants.kPDriveVel, 0 ,0);
+
+
+
  TrajectoryConfig config = new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond, Constants.kMaxAccelerationMetersPerSecondSquared).setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);
 
-Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(1, 1), new Translation2d(2, -1)), new Pose2d(3, 0, new Rotation2d(0)), config);
+//Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(1, 1), new Translation2d(2, -1)), new Pose2d(3, 0, new Rotation2d(0)), config);
+
+Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(.5, .5), new Translation2d(1, 1)), new Pose2d(2, 2, new Rotation2d(0)), config);
+
+RamseteController disRamseteController = new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta);
+disRamseteController.setEnabled(false);
 
 RamseteCommand ramseteCommand = new RamseteCommand(
-  exampleTrajectory,
+  trajectory,
   RobotContainer.m_drivetrain::getPose,
+     // disRamseteController,
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
       new SimpleMotorFeedforward(Constants.ksVolts,
                                  Constants.kvVoltSecondsPerMeter,
                                  Constants.kaVoltSecondsSquaredPerMeter),
       Constants.kDriveKinematics,
       RobotContainer.m_drivetrain::getWheelSpeeds,
-      new PIDController(Constants.kPDriveVel, 0, 0),
-      new PIDController(Constants.kPDriveVel, 0, 0),
-      RobotContainer.m_drivetrain::tankDriveVolts,
+      leftController,
+      rightController,
+      (leftVolts, rightVolts) -> {
+
+      RobotContainer.m_drivetrain.tankDriveVolts(leftVolts, rightVolts);
+
+      
+      leftMeasurement.setNumber(RobotContainer.m_drivetrain.getWheelSpeeds().leftMetersPerSecond);
+      leftReference.setNumber(leftController.getSetpoint());
+
+      rightMeasurement.setNumber(RobotContainer.m_drivetrain.getWheelSpeeds().rightMetersPerSecond);
+      rightReference.setNumber(rightController.getSetpoint());
+      
+      
+      
+      SmartDashboard.putNumber("Left Measurement", leftMeasurement.getDouble(0.0));
+      SmartDashboard.putNumber("Left Reference", leftReference.getDouble(0.0));
+      SmartDashboard.putNumber("Right Measurement", rightMeasurement.getDouble(0.0));
+      SmartDashboard.putNumber("Right Reference", rightReference.getDouble(0.0));
+
+      },
+      //RobotContainer.m_drivetrain::tankDriveVolts,
       RobotContainer.m_drivetrain);
+
+      
 
       return ramseteCommand.andThen(() -> RobotContainer.m_drivetrain.tankDriveVolts(0, 0));
       
@@ -357,7 +405,7 @@ RamseteCommand ramseteCommand = new RamseteCommand(
   //MVP autonomous code that moves the robot backwards for 5 seconds
   public void auto(double speed) {
 
-    if (counter < 250) {
+    if (counter < 200) {
 
      tankDrive(speed, speed); // Was 0.75;
 

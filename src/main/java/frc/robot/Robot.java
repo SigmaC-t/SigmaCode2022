@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -22,6 +28,10 @@ import frc.robot.commands.BasicAuto;
 import frc.robot.commands.Drivestraight;
 import frc.robot.commands.StopIntake;
 import frc.robot.subsystems.BallMechs;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
 import com.revrobotics.RelativeEncoder;
 
 /**
@@ -34,7 +44,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public PneumaticHub hub = new PneumaticHub();
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
-  
+  String trajectoryJSON = "paths/works.wpilib.json";
+  Trajectory trajectory = new Trajectory();
 
 
   private RobotContainer m_robotContainer;
@@ -55,6 +66,15 @@ public class Robot extends TimedRobot {
    // RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
    // RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
     
+   try {
+
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+
+   } catch (IOException ex){
+
+    DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+   }
 
   }
 
@@ -90,8 +110,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    m_autonomousCommand = new BasicAuto(); //RobotContainer.m_drivetrain.getAutonomousCommand(); // 
+
+    //m_autonomousCommand = RobotContainer.m_drivetrain.getAutonomousCommand(trajectory); //new BasicAuto();
    // RobotContainer.navX.resetAngle();
+   m_autonomousCommand = new BasicAuto();
 
     // schedule the autonomous command (exampl'e)
     if (m_autonomousCommand != null) {
@@ -115,6 +137,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    RobotContainer.m_drivetrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+
     RobotContainer.m_Hanger.lENC.setPosition(0);
     RobotContainer.m_Hanger.rENC.setPosition(0);
 
@@ -164,6 +189,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
 
   
 

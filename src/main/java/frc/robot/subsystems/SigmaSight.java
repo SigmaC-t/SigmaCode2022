@@ -31,6 +31,7 @@ public class SigmaSight extends SubsystemBase {
   NetworkTableEntry ty = limelightTable.getEntry("ty");
   NetworkTableEntry ta = limelightTable.getEntry("ta");
   NetworkTableEntry ts = limelightTable.getEntry("ts");
+
   
 
   //Updates value and reflect updated values in SmartDashboard
@@ -149,7 +150,12 @@ public void turnOffLimeLight(){
 }
   
   /** Creates a new SigmaSight. */
-  public SigmaSight() {}
+  public SigmaSight() {
+
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").setNumber(0);
+    
+
+  }
 
   @Override 
   public void periodic() {

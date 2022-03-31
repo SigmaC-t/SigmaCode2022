@@ -206,7 +206,8 @@ public class RobotContainer {
 
    leftTriggerButtonOP.whenPressed(new runHopper(-0.8));
 
-   o_rightBumper.whenPressed(new Outtake());
+   //o_rightBumper.whenPressed(new Outtake());
+   o_rightBumper.whenPressed(new rpmShooter(4100));
    o_rightBumper.whenReleased(new StopIntake());
 
    //o_leftBumper.whileHeld(new rpmShooter(4350));

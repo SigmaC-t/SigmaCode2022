@@ -61,15 +61,15 @@ public final class Constants {
 
     //Ramsete Controller Constants
     //Need to change values below after System Identification tests
-    public static final double ksVolts = 0.27737;
-    public static final double kvVoltSecondsPerMeter = 3.6926; //Change the units according to the measurement of wheels
-    public static final double kaVoltSecondsSquaredPerMeter = 0.42827; 
+    public static final double ksVolts = 0.16977; //= //0.17239; //0.16848;
+    public static final double kvVoltSecondsPerMeter = 3.8018; //3.7934; //Change the units according to the measurement of wheels
+    public static final double kaVoltSecondsSquaredPerMeter = 0.21444; // 0.25027; //0.29465; 
 
-    public static final double kPDriveVel = 4.6575;
-    public static final double kTrackWidthMeter = .8; // Properly characterize
+    public static final double kPDriveVel = 3.6853;
+    public static final double kTrackWidthMeter = 0.9613; //0.95016; //0.94409; // Properly characterize
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeter);
 
-    public static final double kMaxSpeedMetersPerSecond = 1;
+    public static final double kMaxSpeedMetersPerSecond = 1.5; //0.77931;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1;
 
     //Works well for most robots
