@@ -69,6 +69,7 @@ public class BallMechs extends SubsystemBase{
     //Initialization of Cylinders 
      public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.REVPH, 11, 4); // 11, 4
      public DoubleSolenoid ArmBringerUpperB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 3); // 12, 3
+     public DoubleSolenoid hoodie = new DoubleSolenoid(PneumaticsModuleType.REVPH, 14, 1);
 
     //Initialization of IR Sensors
     //Digital Input class used to get a simple boolean value from the IR sensors.
@@ -231,6 +232,21 @@ public class BallMechs extends SubsystemBase{
 
     }
 
+    public boolean hoodieUp(){
+
+        hoodie.set(Value.kForward);
+    
+        return true;  
+    
+      }
+    
+      public boolean hoodieDown(){
+    
+        hoodie.set(Value.kReverse);
+    
+        return true;
+    
+      }
 
     //Make intake run independetly from able to run intake independently from hopper.
 

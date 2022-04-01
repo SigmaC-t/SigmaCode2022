@@ -31,6 +31,8 @@ import frc.robot.commands.rpmShooter;
 import frc.robot.commands.descendHanger;
 import frc.robot.commands.dumbShooter;
 import frc.robot.commands.gearShift;
+import frc.robot.commands.hoodDown;
+import frc.robot.commands.hoodUp;
 import frc.robot.commands.lowerArms;
 import frc.robot.commands.runHopper;
 import frc.robot.commands.runIntakeB;
@@ -74,6 +76,8 @@ public class RobotContainer {
 
   Button dpadDownButton = new Button(() -> driverController.getPOV() == 180);
   Button dpadUpButton = new Button(() -> driverController.getPOV() == 0);
+  Button dpadRightButton = new Button(() -> driverController.getPOV() == 90);
+  Button dpadLeftButton = new Button(() -> driverController.getPOV() == 270);
 
   Button dpadDownButtonOP = new Button(() -> operatorController.getPOV() == 180);
   Button dpadUpButtonOP = new Button(() -> operatorController.getPOV() == 0);
@@ -135,29 +139,22 @@ public class RobotContainer {
 
     m_rightBumper.whenPressed(new runShooter(0.85));
 
-    //Automatic hopper
-    //m_rightBumper.whenPressed(new AutoHopper());
+
 
     //m_rightBumper.whenHeld(new DriveToRange());
 
     //Run Hopper upwards
   
     dpadDownButton.whileHeld(new runHopper(-0.8));
-  // dpadDownButton.whenPressed(new runHopper(-0.4));
-  // dpadDownButton.whenReleased(new StopIntake());
+
     
     //Run Hopper downwards
     dpadUpButton.whileHeld(new runHopper(0.8));
 
-    //dpadUpButton.whenPressed(new runHopper(0.4));
-   // dpadUpButton.whenReleased(new StopIntake());
+    dpadRightButton.whenPressed(new hoodUp());
 
-   m_leftBumper.whileHeld(new gearShift(true));
-   // m_leftBumper.whenPressed(new gearShift(true));
-   // m_leftBumper.whenReleased(new gearShift(false));
+    dpadLeftButton.whenPressed(new hoodDown());
 
-  // m_buttonB.whenPressed(new runIntakeB(-0.9, -0.8));
-//  m_buttonB.whenReleased(new StopIntake());
 
     m_buttonB.whenPressed(new Outtake());
     m_buttonB.whenReleased(new StopIntake());

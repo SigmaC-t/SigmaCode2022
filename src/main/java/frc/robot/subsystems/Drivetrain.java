@@ -12,8 +12,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+
+import java.io.IOException;
 import java.lang.Math.*;
 import java.lang.reflect.GenericDeclaration;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -33,11 +36,14 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.SPI;
@@ -180,9 +186,9 @@ double turnKP = 0.008;
 
     resetEncoders();
  
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-m_gyro.getYaw()));
 
-    SmartDashboard.putData("FIeld", m_field);
+    SmartDashboard.putData("Field", m_field);
     
 
   }
@@ -240,7 +246,7 @@ double turnKP = 0.008;
  @Override
  public void periodic() {
    m_odometry.update(
-   m_gyro.getRotation2d(), -nativeUnitsToDistanceMeters(leftENC.getPosition()), -nativeUnitsToDistanceMeters(-rightENC.getPosition()));
+   Rotation2d.fromDegrees(-m_gyro.getYaw()), -nativeUnitsToDistanceMeters(leftENC.getPosition()), -nativeUnitsToDistanceMeters(-rightENC.getPosition()));
 
    var translation = m_odometry.getPoseMeters().getTranslation();
    SmartDashboard.putNumber("X", translation.getX());
@@ -267,7 +273,7 @@ double turnKP = 0.008;
 
  public void resetOdometry(Pose2d pose){
    resetEncoders();
-   m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+   m_odometry.resetPosition(pose, Rotation2d.fromDegrees(-m_gyro.getYaw()));
 
  }
 
@@ -316,6 +322,24 @@ double turnKP = 0.008;
 
  }
 
+ public Trajectory generateTrajectory (String trajectory){
+
+  Trajectory traj = new Trajectory();
+
+  try {
+
+    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectory);
+    traj = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+
+   } catch (IOException ex){
+
+    DriverStation.reportError("Unable to open trajectory: " + trajectory, ex.getStackTrace());
+   }
+
+  return traj;
+
+ }
+
  public double velocityToMetersPerSeconds (double RPM){
 
   double wheelRotations = RPM / gearRatio;
@@ -328,6 +352,7 @@ double turnKP = 0.008;
  }
 
  public Command getAutonomousCommand (Trajectory trajectory){
+
 
   var autoVoltageConstraint =
   new DifferentialDriveVoltageConstraint(
@@ -345,7 +370,6 @@ double turnKP = 0.008;
 
 var leftController = new PIDController(Constants.kPDriveVel, 0 , 0);
 var rightController = new PIDController(Constants.kPDriveVel, 0 ,0);
-
 
 
  TrajectoryConfig config = new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond, Constants.kMaxAccelerationMetersPerSecondSquared).setKinematics(Constants.kDriveKinematics).addConstraint(autoVoltageConstraint);

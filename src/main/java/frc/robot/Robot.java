@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.BallMech;
 import frc.robot.commands.BasicAuto;
+import frc.robot.commands.ComplexAuto;
+import frc.robot.commands.ComplexAutoP2;
 import frc.robot.commands.Drivestraight;
 import frc.robot.commands.StopIntake;
 import frc.robot.subsystems.BallMechs;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -45,7 +48,16 @@ public class Robot extends TimedRobot {
   public PneumaticHub hub = new PneumaticHub();
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
   String trajectoryJSON = "paths/works.wpilib.json";
+  String trajectoryFIRST = "paths/firstsss.wpilib.json";
+  String trajectorySECOND = "paths/secondssss.wpilib.json";
+  String trajectoryTHIRD = "paths/thirdssssss.wpilib.json";
+  String trajectoryFOURTH = "paths/fourth.wpilib.json";
+
   Trajectory trajectory = new Trajectory();
+  Trajectory first = new Trajectory();
+  Trajectory second = new Trajectory();
+  Trajectory third = new Trajectory();
+  Trajectory fourth = new Trajectory();
 
 
   private RobotContainer m_robotContainer;
@@ -75,6 +87,12 @@ public class Robot extends TimedRobot {
 
     DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
    }
+
+  first = RobotContainer.m_drivetrain.generateTrajectory(trajectoryFIRST);
+  second = RobotContainer.m_drivetrain.generateTrajectory(trajectorySECOND);
+  third = RobotContainer.m_drivetrain.generateTrajectory(trajectoryTHIRD);
+  fourth = RobotContainer.m_drivetrain.generateTrajectory(trajectoryFOURTH);
+
 
   }
 
@@ -109,13 +127,25 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+     
+    RobotContainer.m_drivetrain.getRightEncoder().setPosition(0);
+    RobotContainer.m_drivetrain.getLeftEncoder().setPosition(0);
 
+    RobotContainer.m_drivetrain.resetOdometry(second.getInitialPose());
+    // RobotContainer.m_drivetrain.leftMaster.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.m_drivetrain.leftSlave.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.m_drivetrain.leftSlave2.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.m_drivetrain.rightMaster.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.m_drivetrain.rightSlave.setIdleMode(IdleMode.kBrake);
+    // RobotContainer.m_drivetrain.rightSlave2.setIdleMode(IdleMode.kBrake);
 
-    //m_autonomousCommand = RobotContainer.m_drivetrain.getAutonomousCommand(trajectory); //new BasicAuto();
+  m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
+// m_autonomousCommand = new ComplexAutoP2(third, fourth);
+   // m_autonomousCommand = RobotContainer.m_drivetrain.getAutonomousCommand(fourth);//new BasicAuto();
    // RobotContainer.navX.resetAngle();
-   m_autonomousCommand = new BasicAuto();
+   //m_autonomousCommand = new BasicAuto();
 
-    // schedule the autonomous command (exampl'e)
+    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       System.out.println("Autonomous Schedule");
       m_autonomousCommand.schedule();
@@ -137,6 +167,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    // RobotContainer.m_drivetrain.leftMaster.setIdleMode(IdleMode.kCoast);
+    // RobotContainer.m_drivetrain.leftSlave.setIdleMode(IdleMode.kCoast);
+    // RobotContainer.m_drivetrain.leftSlave2.setIdleMode(IdleMode.kCoast);
+    // RobotContainer.m_drivetrain.rightMaster.setIdleMode(IdleMode.kCoast);
+    // RobotContainer.m_drivetrain.rightSlave.setIdleMode(IdleMode.kCoast);
+    // RobotContainer.m_drivetrain.rightSlave2.setIdleMode(IdleMode.kCoast);
 
     RobotContainer.m_drivetrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
 
