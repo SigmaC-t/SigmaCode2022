@@ -49,7 +49,7 @@ public final class Constants {
     //Limelight Constants09
     public static final double TURN_KP = -0.03;
     public static final double MIN_AIM_COMMAND = 0.2;//0.2;
-    public static final double DISTANCE_KP = -0.05; // was -0.1
+    public static final double DISTANCE_KP = -0.1; // was -0.1
 
     //11, 4 = BACK
     //12, 3 = FRONT
@@ -69,8 +69,8 @@ public final class Constants {
     public static final double kTrackWidthMeter = 0.9613; //0.95016; //0.94409; // Properly characterize
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackWidthMeter);
 
-    public static final double kMaxSpeedMetersPerSecond = 1.5; //0.77931;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+    public static final double kMaxSpeedMetersPerSecond = 3; //0.77931;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
     //Works well for most robots
     public static final double kRamseteB = 2;
@@ -80,6 +80,8 @@ public final class Constants {
     public static final int ARMS_FWD = 15;
     public static final int ARMS_BACK = 0;
     public static final int UP_MOTOR = 15;
+    public static final int SECONDARY_ARMS_FWD = 0;
+    public static final int SECONDARY_ARM_BACK = 0;
 
 
 

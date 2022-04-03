@@ -14,9 +14,9 @@ import frc.robot.RobotContainer;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PathIntake extends ParallelCommandGroup {
   /** Creates a new PathIntake. */
-  public PathIntake(Trajectory traj) {
+  public PathIntake(Trajectory traj, int stage, int limit) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoIntake(), RobotContainer.m_drivetrain.getAutonomousCommand(traj));
+    addCommands(new AutoIntake(stage, limit), RobotContainer.m_drivetrain.getAutonomousCommand(traj));
   }
 }

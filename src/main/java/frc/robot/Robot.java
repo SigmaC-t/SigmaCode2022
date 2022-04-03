@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -48,16 +49,19 @@ public class Robot extends TimedRobot {
   public PneumaticHub hub = new PneumaticHub();
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
   String trajectoryJSON = "paths/works.wpilib.json";
-  String trajectoryFIRST = "paths/firstsss.wpilib.json";
+  String trajectoryFIRST = "paths/firstd.wpilib.json";
   String trajectorySECOND = "paths/secondssss.wpilib.json";
-  String trajectoryTHIRD = "paths/thirdssssss.wpilib.json";
-  String trajectoryFOURTH = "paths/fourth.wpilib.json";
+  String trajectoryTHIRD = "paths/thirdooo.wpilib.json";
+  String trajectoryFOURTH = "paths/fourthd.wpilib.json";
+  String auto;
 
   Trajectory trajectory = new Trajectory();
   Trajectory first = new Trajectory();
   Trajectory second = new Trajectory();
   Trajectory third = new Trajectory();
   Trajectory fourth = new Trajectory();
+
+  //DigitalInput magnet = new DigitalInput(6);
 
 
   private RobotContainer m_robotContainer;
@@ -67,6 +71,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    SmartDashboard.putString("Auto", "Basic");
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -127,6 +132,17 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
+
+    // if (auto.equals("Basic")){
+
+    //   m_autonomousCommand = new BasicAuto();
+
+    // } else if (auto.equals("Complex")){
+
+    //   m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
+
+    // }
      
     RobotContainer.m_drivetrain.getRightEncoder().setPosition(0);
     RobotContainer.m_drivetrain.getLeftEncoder().setPosition(0);
@@ -139,7 +155,7 @@ public class Robot extends TimedRobot {
     // RobotContainer.m_drivetrain.rightSlave.setIdleMode(IdleMode.kBrake);
     // RobotContainer.m_drivetrain.rightSlave2.setIdleMode(IdleMode.kBrake);
 
-  m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
+ m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
 // m_autonomousCommand = new ComplexAutoP2(third, fourth);
    // m_autonomousCommand = RobotContainer.m_drivetrain.getAutonomousCommand(fourth);//new BasicAuto();
    // RobotContainer.navX.resetAngle();
@@ -199,7 +215,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-  
+
+    //System.out.println(RobotContainer.m_Hanger.magnet.get());
     //System.out.println(hub.getPressure(0));
     // System.out.println("Left: " + RobotContainer.m_drivetrain.getLeftEncoder().getPosition());
     // System.out.println("Right " + RobotContainer.m_drivetrain.getRightEncoder().getPosition());

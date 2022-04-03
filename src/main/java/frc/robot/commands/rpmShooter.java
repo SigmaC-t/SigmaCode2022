@@ -39,7 +39,7 @@ public class rpmShooter extends CommandBase {
   @Override
   public void execute() {
 
-    RPM = SmartDashboard.getNumber("RPM", 3900);
+    RPM = SmartDashboard.getNumber("RPM", 4100);
 
   //Start spinning the flywheel.
       RobotContainer.m_BallMechs.rpmShooter(RPM);

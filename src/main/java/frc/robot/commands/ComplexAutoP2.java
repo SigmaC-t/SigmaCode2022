@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -16,6 +18,6 @@ public class ComplexAutoP2 extends SequentialCommandGroup {
   /** Creates a new ComplexAutoP2. */
   public ComplexAutoP2(Trajectory third, Trajectory fourth) {
     // Add your commands in the addCommands() call, e.g.
-    addCommands(new InstantCommand(() -> { RobotContainer.m_drivetrain.resetOdometry(third.getInitialPose());}), RobotContainer.m_drivetrain.getAutonomousCommand(third), RobotContainer.m_drivetrain.getAutonomousCommand(fourth));
+    addCommands(new InstantCommand(() -> { RobotContainer.m_drivetrain.resetOdometry(new Pose2d(7.621, 2.676, Rotation2d.fromDegrees(41))/*third.getInitialPose()*/);}), new PathIntake(third, 2, 1000), /*RobotContainer.m_drivetrain.getAutonomousCommand(third),*/ new PathIntake(fourth, 1, 200) /*RobotContainer.m_drivetrain.getAutonomousCommand(fourth)*/, new DriveToRange(), new ShooterSequence());
   }
 }

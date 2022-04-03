@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -11,8 +12,12 @@ import frc.robot.RobotContainer;
 public class AutoIntake extends CommandBase {
 
   int counter;
+  int flag;
+  int climit;
   /** Creates a new AutoIntake. */
-  public AutoIntake() {
+  public AutoIntake(int stage, int limit) {
+    flag = stage;
+    climit = limit;
     addRequirements(RobotContainer.m_BallMechs);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -21,7 +26,12 @@ public class AutoIntake extends CommandBase {
   @Override
   public void initialize() {
 
+    RobotContainer.m_BallMechs.ballCount = 0;
     counter = 0;
+
+    Timer time = new Timer();
+
+    time.start();
 
   }
 
@@ -29,7 +39,7 @@ public class AutoIntake extends CommandBase {
   @Override
   public void execute() {
 
-    RobotContainer.m_BallMechs.intakeBack(0.8, 0.8, 0.4, true);
+    RobotContainer.m_BallMechs.intakeBack(1, 1, 0.4, true);
     System.out.println("Intake is working");
     counter++;
 
@@ -39,6 +49,7 @@ public class AutoIntake extends CommandBase {
   @Override
   public void end(boolean interrupted) {
 
+    counter = 0;
     RobotContainer.m_BallMechs.intakeBack(0, 0, 0, false);
     RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward); 
 
@@ -50,11 +61,23 @@ public class AutoIntake extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    if (counter > 200){
+    if (counter > climit){
 
       return true;
 
+    } else if (RobotContainer.m_BallMechs.ballCount == 1 && flag == 1){
+
+      Timer.delay(0.5);
+
+      return true;
+
+    } else if (RobotContainer.m_BallMechs.ballCount == 2 && flag == 2){
+
+      Timer.delay(0.5);
+      return true;
+       
     }
+
     return false;
   }
 }

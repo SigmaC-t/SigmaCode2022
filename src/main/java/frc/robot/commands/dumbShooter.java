@@ -13,7 +13,7 @@ public class dumbShooter extends CommandBase {
   int counter = 0;
   int indexerCounter = 0;
   int shootAnyways = 0;
-  double RPM = 3900;
+  double RPM = 4100;
   /** Creates a new dumbShooter. */
   public dumbShooter() {
     addRequirements(RobotContainer.m_BallMechs);
@@ -40,7 +40,7 @@ public class dumbShooter extends CommandBase {
 
     counter++;
 
-    RPM = SmartDashboard.getNumber("RPM", 3900);
+    RPM = SmartDashboard.getNumber("RPM", 4100);
 
     RobotContainer.m_BallMechs.rpmShooter(RPM);
 
@@ -108,6 +108,7 @@ public class dumbShooter extends CommandBase {
     RobotContainer.m_BallMechs.shooter(0);
     RobotContainer.m_BallMechs.indexerMotor.set(0);
     RobotContainer.m_BallMechs.runHopper(0);
+    RobotContainer.m_BallMechs.ballCount = 0;
     indexerCounter = 0;
     shootAnyways = 0;
 

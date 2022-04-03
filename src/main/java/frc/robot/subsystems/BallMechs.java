@@ -47,7 +47,7 @@ public class BallMechs extends SubsystemBase{
 
     public boolean ball;
 
-    public int highRPM = 3900;
+    public int highRPM = 4100;
 
     public int ballCount;
     double HopperSpeed = 0.4;
@@ -69,7 +69,7 @@ public class BallMechs extends SubsystemBase{
     //Initialization of Cylinders 
      public DoubleSolenoid ArmBringerUpperF = new DoubleSolenoid(PneumaticsModuleType.REVPH, 11, 4); // 11, 4
      public DoubleSolenoid ArmBringerUpperB = new DoubleSolenoid(PneumaticsModuleType.REVPH, 12, 3); // 12, 3
-     public DoubleSolenoid hoodie = new DoubleSolenoid(PneumaticsModuleType.REVPH, 14, 1);
+     public DoubleSolenoid hoodie = new DoubleSolenoid(PneumaticsModuleType.REVPH, 10, 5);
 
     //Initialization of IR Sensors
     //Digital Input class used to get a simple boolean value from the IR sensors.
@@ -115,7 +115,7 @@ public class BallMechs extends SubsystemBase{
         shooterMotor.setIdleMode(IdleMode.kBrake);
         shooterMotorTwo.setIdleMode(IdleMode.kBrake);
 
-        SmartDashboard.putNumber("RPM", 3900);
+        SmartDashboard.putNumber("RPM", 4100);
         SmartDashboard.putNumber("Ball Count", ballCount);
 
 	}

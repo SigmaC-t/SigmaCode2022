@@ -40,10 +40,14 @@ public class DriveToRange extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    if (counter > 200){
+    if (counter > 20){
 
       return true;
       
+    } else if (Math.abs(RobotContainer.m_SigmaSight.yVal) < 2){
+
+      return true;
+
     }
     
     return false;

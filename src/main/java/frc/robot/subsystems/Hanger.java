@@ -10,8 +10,11 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,13 +25,25 @@ public class Hanger extends SubsystemBase {
   public CANSparkMax hangR = new CANSparkMax(Constants.HANGER_MOTOR, MotorType.kBrushless);
   public CANSparkMax hangL= new CANSparkMax(Constants.HANGER_MOTOR_TWO, MotorType.kBrushless);
 
+  public Encoder leftArmENC;
+  public Encoder rightArmENC; 
+
+  public DutyCycleEncoder rightArmENCO;
+  public DutyCycleEncoder leftArmENCO;
+
   public static DoubleSolenoid hangARMS = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.ARMS_FWD, Constants.ARMS_BACK);
+  //public static DoubleSolenoid secondaryARMS = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.SECONDARY_ARMS_FWD, Constants.SECONDARY_ARM_BACK);
   
 
   SparkMaxPIDController m_PidControllerR = hangR.getPIDController();
   SparkMaxPIDController m_PidControllerL = hangL.getPIDController();
   public RelativeEncoder rENC = hangR.getEncoder();
   public RelativeEncoder lENC = hangL.getEncoder();
+
+  PIDController leftArmPID;
+  PIDController rightArmPID;
+
+  public DigitalInput magnet = new DigitalInput(6);
 
   double maxPosition = 128; //95
   double minPosition = 0;
@@ -48,10 +63,15 @@ public class Hanger extends SubsystemBase {
 
   public Hanger() {
 
+    // rightArmENC = new Encoder(0, 1);
+    // leftArmENC = new Encoder(2, 3);
+    
+
     hangR.setIdleMode(IdleMode.kBrake);
     hangL.setIdleMode(IdleMode.kBrake);
 
-    hangARMS.set(Value.kReverse);
+    //hangARMS.set(Value.kReverse);
+    hangARMS.set(Value.kForward); // Temporary until hanger is fixed.
     kP = 0.1;
     kI = 0.0001;
     kD = 1;
@@ -67,6 +87,9 @@ public class Hanger extends SubsystemBase {
 
     lENC.setPosition(0);
     rENC.setPosition(0);
+
+    // leftArmPID.setPID(0, 0, 0);
+    // rightArmPID.setPID(0, 0, 0);
  
   }
 
@@ -86,24 +109,46 @@ public class Hanger extends SubsystemBase {
 
   }
 
+  // public boolean secondaryArmsUP(){
+
+  //   secondaryARMS.set(Value.kForward);
+
+  //   return false;
+
+  // }
+
+  // public boolean secondaryArmsDOWN(){
+
+  //   secondaryARMS.set(Value.kReverse);
+
+  //   return true;
+
+  // }
+
   public void ascendArms(double speed){
+
+      hangR.set(0.5);
+      hangL.follow(hangR, true);
+
+  }
+
 
    // if (hangARMS.get() == Value.kForward){
 
-  if (rENC.getPosition() < maxPosition){
+  // if (rENC.getPosition() < maxPosition){
 
-      hangR.set(speed);
-      hangL.set(-speed);
-      System.out.println("rENC: " + rENC.getPosition());
-   //   System.out.println("lENC " + lENC.getPosition());
+  //     hangR.set(speed);
+  //     hangL.set(-speed);
+  //     System.out.println("rENC: " + rENC.getPosition());
+  //  //   System.out.println("lENC " + lENC.getPosition());
       
-  } else if (rENC.getPosition() >= maxPosition){
+  // } else if (rENC.getPosition() >= maxPosition){
 
-    hangR.set(0);
-    hangL.set(0);
-    System.out.println("TOO HIGH");
+  //   hangR.set(0);
+  //   hangL.set(0);
+  //   System.out.println("TOO HIGH");
 
- }
+ //}
  
      /* hangL.set(speed);
       hangR.set(-speed);
@@ -114,7 +159,7 @@ public class Hanger extends SubsystemBase {
 
     
 
-  }
+  //}
 
   public void descendHome (){
 
@@ -124,30 +169,43 @@ public class Hanger extends SubsystemBase {
 
   }
 
+  
+
   public void descendArms(double speed){
 
-if (rENC.getPosition() > minPosition){
+    if (!magnet.get()){
 
-      hangR.set(-speed);
-      hangL.set(speed);
-      System.out.println("rENC: " + rENC.getPosition());
-    //  System.out.println("lENC " + lENC.getPosition());
+      hangR.set(0);
 
- } else if (rENC.getPosition() <= minPosition){
+    } else {
 
-     hangR.set(0);
-     hangL.set(0);
-     System.out.println("TOO LOW");
-//     rENC.setPosition(0);
+      hangR.set(-1);
+      hangL.follow(hangR, true);
 
-   }
+    }
+  }
+// if (rENC.getPosition() > minPosition){
+
+//       hangR.set(-speed);
+//       hangL.set(speed);
+//       System.out.println("rENC: " + rENC.getPosition());
+//     //  System.out.println("lENC " + lENC.getPosition());
+
+//  } else if (rENC.getPosition() <= minPosition){
+
+//      hangR.set(0);
+//      hangL.set(0);
+//      System.out.println("TOO LOW");
+// //     rENC.setPosition(0);
+
+  // }
    
    /* hangR.set(speed);
     hangL.set(-speed);
     System.out.println("HangL: " + lENC.getPosition());
     System.out.println("HangR: " + rENC.getPosition()); */
 
-  }
+ // }
 
 
  // public void 

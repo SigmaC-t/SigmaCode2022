@@ -14,6 +14,6 @@ public class BasicAuto extends SequentialCommandGroup {
   public BasicAuto() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new DriveIntake(), new DriveToRange(), new ShooterSequence() ); //new Focus());
+    addCommands(new DriveIntake(), new DriveToRange(), new ShooterSequence()); //new Focus());
   }
 }
