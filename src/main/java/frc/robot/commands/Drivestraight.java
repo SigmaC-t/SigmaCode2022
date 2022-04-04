@@ -28,7 +28,7 @@ public class Drivestraight extends CommandBase {
   @Override
   public void execute() {
     System.out.println("Please work");
-    RobotContainer.m_drivetrain.auto(speed);
+    RobotContainer.m_drivetrain.tankDrive(speed, speed);
     Counter++;
 
     /*if (Counter > 50){
@@ -41,12 +41,16 @@ public class Drivestraight extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+    Counter = 0;
+
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Counter > 100){
+    if (Counter > 20){
       
       System.out.println("DriveStraight is finished");
       return true;

@@ -36,8 +36,6 @@ public class BallMechs extends SubsystemBase{
 
     public static CANSparkMax indexerMotor = new CANSparkMax(Constants.INDEXER_MOTOR, MotorType.kBrushed);
 
-    public static CANSparkMax upMotor = new CANSparkMax(15, MotorType.kBrushed);
-
     private SparkMaxPIDController shooterPID;
     public RelativeEncoder shooterENC;
     private static CANSparkMax shooterMotor = new CANSparkMax(Constants.SHOOTER_MOTOR, MotorType.kBrushless); //Change kBrushed back to kBrushless after testing
@@ -86,21 +84,22 @@ public class BallMechs extends SubsystemBase{
 		intakeMotorF.setIdleMode(IdleMode.kCoast);
         intakeMotorB.setIdleMode(IdleMode.kCoast);
         hopperMotor.setIdleMode(IdleMode.kBrake);
-        upMotor.setIdleMode(IdleMode.kBrake);
 
         shooterPID = shooterMotorTwo.getPIDController();
         shooterENC = shooterMotorTwo.getEncoder();
 
-        kP = SmartDashboard.getNumber("P", 0.000060); //0.000000081036 * 2; // 0.000025000; //0.000000081036 * 2; //0.090966;
-        kI = 0.00000045;//75; // SmartDashboard.getNumber("I", 0);  // 0.000000000000001;
+        kP = 0.000060; //SmartDashboard.getNumber("P", 0.000060); //0.000000081036 * 2; // 0.000025000; //0.000000081036 * 2; //0.090966;
+        kI = 0.00000045; //75; // SmartDashboard.getNumber("I", 0);  // 0.000000000000001;
         kD = 0;
-        kIz = 350;
-        kFF = SmartDashboard.getNumber("FF", 0.000172); //0.0044631 / 25.05; // new SimpleMotorFeedforward(0.1277, 0.1258, 0.0044631); // kS, kV, kA
+        kIz = 350; //600;
+        kFF = 0.000172; //SmartDashboard.getNumber("FF", 0.000172); //0.0044631 / 25.05; // new SimpleMotorFeedforward(0.1277, 0.1258, 0.0044631); // kS, kV, kA
         
         kMaxOutput = 1;
         kMinOutput = -1;
         maxRPM = 5700;
         
+        hoodie.set(Value.kReverse);
+
         SmartDashboard.putNumber("P", kP);
         SmartDashboard.putNumber("I", kI);
         SmartDashboard.putNumber("D", kD);
@@ -116,6 +115,7 @@ public class BallMechs extends SubsystemBase{
         shooterMotorTwo.setIdleMode(IdleMode.kBrake);
 
         SmartDashboard.putNumber("RPM", 4100);
+        SmartDashboard.putNumber("Hooded RPM", 5500);
         SmartDashboard.putNumber("Ball Count", ballCount);
 
 	}
@@ -146,7 +146,6 @@ public class BallMechs extends SubsystemBase{
             ArmBringerUpperF.set(Value.kForward);
             intakeMotorF.set(-speed);
             runHopper(hopper);
-            upMotor.set(upSpeed);
             RobotContainer.mainController.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
 
 
@@ -183,7 +182,6 @@ public class BallMechs extends SubsystemBase{
         System.out.println(ArmBringerUpperB.get());
 
 
-            upMotor.set(upSpeed);
             runHopper(hopper);
 
         ArmBringerUpperB.set(Value.kReverse);
@@ -234,7 +232,7 @@ public class BallMechs extends SubsystemBase{
 
     public boolean hoodieUp(){
 
-        hoodie.set(Value.kForward);
+        hoodie.set(Value.kReverse);
     
         return true;  
     
@@ -242,7 +240,7 @@ public class BallMechs extends SubsystemBase{
     
       public boolean hoodieDown(){
     
-        hoodie.set(Value.kReverse);
+        hoodie.set(Value.kForward);
     
         return true;
     

@@ -71,7 +71,7 @@ public class Hanger extends SubsystemBase {
     hangL.setIdleMode(IdleMode.kBrake);
 
     //hangARMS.set(Value.kReverse);
-    hangARMS.set(Value.kForward); // Temporary until hanger is fixed.
+    hangARMS.set(Value.kReverse); //kForward is arms back
     kP = 0.1;
     kI = 0.0001;
     kD = 1;

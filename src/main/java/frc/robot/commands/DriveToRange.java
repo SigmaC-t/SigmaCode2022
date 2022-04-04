@@ -9,9 +9,11 @@ import frc.robot.RobotContainer;
 
 public class DriveToRange extends CommandBase {
   int counter;
+  String length;
   /** Creates a new DriveToRange. */
-  public DriveToRange() {
+  public DriveToRange(String x) {
     addRequirements(RobotContainer.m_drivetrain, RobotContainer.m_SigmaSight);
+    length = x;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -40,11 +42,15 @@ public class DriveToRange extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    if (counter > 20){
+    if (counter > 20 && length.equals("short")){
 
       return true;
       
     } else if (Math.abs(RobotContainer.m_SigmaSight.yVal) < 2){
+
+      return true;
+
+    } else if (counter > 100){
 
       return true;
 

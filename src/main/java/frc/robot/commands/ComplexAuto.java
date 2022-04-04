@@ -17,6 +17,6 @@ public class ComplexAuto extends SequentialCommandGroup {
   public ComplexAuto(Trajectory first, Trajectory second, Trajectory third, Trajectory fourth) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new PathIntake(second, 1, 1000), RobotContainer.m_drivetrain.getAutonomousCommand(first), new DriveToRange(), new dumbShooter()/*new ShooterSequence()*/, new ComplexAutoP2(third, fourth)); //RobotContainer.m_drivetrain.getAutonomousCommand(fourth));
+    addCommands(new PathIntake(second, 1, 100), new PathHopper(first), /*RobotContainer.m_drivetrain.getAutonomousCommand(first),*/ new DriveToRange("short"), new dumbShooter(150)/*new ShooterSequence()*/, new ComplexAutoP2(third, fourth)); //RobotContainer.m_drivetrain.getAutonomousCommand(fourth));
   }
 }

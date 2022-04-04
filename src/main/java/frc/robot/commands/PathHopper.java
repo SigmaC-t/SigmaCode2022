@@ -6,17 +6,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.RobotContainer;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class PathIntake extends ParallelCommandGroup {
-  /** Creates a new PathIntake. */
-  public PathIntake(Trajectory traj, int ballWait, int limit) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new AutoIntake(ballWait, limit), RobotContainer.m_drivetrain.getAutonomousCommand(traj));
+public class PathHopper extends ParallelDeadlineGroup {
+  /** Creates a new PathHopper. */
+  public PathHopper(Trajectory traj) {
+    // Add the deadline command in the super() call. Add other commands using
+    // addCommands().
+    super(RobotContainer.m_drivetrain.getAutonomousCommand(traj));
+    addCommands(new runHopper(1));
   }
 }

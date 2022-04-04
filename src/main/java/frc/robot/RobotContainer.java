@@ -162,6 +162,10 @@ public class RobotContainer {
    m_buttonX.whenPressed(new runIntakeF(-0.9, -1)); 
    m_buttonX.whenReleased(new StopIntake());
 
+   m_leftBumper.whileHeld(new gearShift(true));
+
+
+
 
    //****Operator Control */
    dpadRightButtonOP.whenPressed(new lowerArms());
@@ -210,7 +214,7 @@ public class RobotContainer {
    //o_leftBumper.whileHeld(new rpmShooter(4350));
    //o_leftBumper.whenPressed(new StopIntake());
 
-   o_leftBumper.whenPressed(new dumbShooter());
+   o_leftBumper.whenPressed(new dumbShooter(150));
    o_leftBumper.whenReleased(new StopIntake());
 
    o_buttonX.whileHeld(new HOMING());

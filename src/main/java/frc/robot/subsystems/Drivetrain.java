@@ -74,7 +74,7 @@ public DoubleSolenoid gearShifter = null;
 
 public DifferentialDriveOdometry m_odometry;
 
-public double gearRatio = 9.91845616; //Low gear
+public double gearRatio = 9.91845616; //Low gear // multiply 2.65
 
 //MotorControllerGroup initial initiablization
 MotorControllerGroup left = null;
@@ -136,7 +136,7 @@ double turnKP = 0.008;
     CANSparkMax rightSlave2 = new CANSparkMax(Constants.DRIVETRAIN_RIGHT_SLAVE2, MotorType.kBrushless);
 
 
-    leftLimiter = new SlewRateLimiter(1);
+    leftLimiter = new SlewRateLimiter(0.5); //1[]\
     rightLimiter = new SlewRateLimiter(1);
 
     leftMaster.restoreFactoryDefaults();

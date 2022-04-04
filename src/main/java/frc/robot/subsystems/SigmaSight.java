@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 
 public class SigmaSight extends SubsystemBase {
@@ -81,6 +82,33 @@ public class SigmaSight extends SubsystemBase {
 
   }
   
+  int hoodedDistance;
+  public int optimalRPM(){
+
+    int optimalRPM = 4100;
+
+    if (Math.abs(yVal) > hoodedDistance) {/*Insert Distance that the hooded shooter starts to become effective)*/
+
+      RobotContainer.m_BallMechs.hoodieDown();
+
+    } else {
+
+      RobotContainer.m_BallMechs.hoodieUp();
+
+    }
+
+    if (Math.abs(yVal) > 2){
+
+      //Insert equation that calculates optimal RPM for distance here.
+      return optimalRPM;
+
+    } else {
+
+      optimalRPM = 4100;
+      return optimalRPM;
+    }
+
+  }
 
   public boolean lineUpToShoot(Drivetrain drivetrain)
     {

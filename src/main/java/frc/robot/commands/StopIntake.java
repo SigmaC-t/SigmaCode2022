@@ -45,7 +45,6 @@ public class StopIntake extends CommandBase {
     RobotContainer.m_BallMechs.intakeMotorF.set(0);
     RobotContainer.m_BallMechs.runHopper(speed);
     RobotContainer.m_BallMechs.indexerMotor.set(speed);
-    RobotContainer.m_BallMechs.upMotor.set(speed);
     RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kForward); 
     RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse); //
     //RobotContainer.m_drivetrain.gearShifter.set(Value.kReverse);

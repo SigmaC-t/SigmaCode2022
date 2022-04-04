@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriveIntake extends ParallelCommandGroup {
   /** Creates a new DriveIntake. */
-  public DriveIntake() {
+  public DriveIntake(double speed) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Drivestraight(0.75), new AutoIntake(1, 1000));
+    addCommands(new Drivestraight(speed), new AutoIntake(1, 200));
   }
 }

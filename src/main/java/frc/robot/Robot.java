@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.BallMech;
 import frc.robot.commands.BasicAuto;
@@ -46,6 +47,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private SendableChooser<Command> chooser = new SendableChooser<>();
+
   public PneumaticHub hub = new PneumaticHub();
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
   String trajectoryJSON = "paths/works.wpilib.json";
@@ -53,13 +56,13 @@ public class Robot extends TimedRobot {
   String trajectorySECOND = "paths/secondssss.wpilib.json";
   String trajectoryTHIRD = "paths/thirdooo.wpilib.json";
   String trajectoryFOURTH = "paths/fourthd.wpilib.json";
-  String auto;
 
   Trajectory trajectory = new Trajectory();
   Trajectory first = new Trajectory();
   Trajectory second = new Trajectory();
   Trajectory third = new Trajectory();
   Trajectory fourth = new Trajectory();
+
 
   //DigitalInput magnet = new DigitalInput(6);
 
@@ -75,13 +78,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    //RobotContainer.m_BallMechs.counterBot.setUpSource(0);
-    //RobotContainer.m_BallMechs.counterBot.setSemiPeriodMode(true);
     //hub.enableCompressorDigital();
     hub.enableCompressorAnalog(90, 120); // This is where it was 120 PSI. was 105
     RobotContainer.m_drivetrain.gearShifter.set(Value.kReverse); //kReverse is low gear
-   // RobotContainer.m_BallMechs.ArmBringerUpperB.set(Value.kReverse);
-   // RobotContainer.m_BallMechs.ArmBringerUpperF.set(Value.kReverse);
     
    try {
 
@@ -97,6 +96,14 @@ public class Robot extends TimedRobot {
   second = RobotContainer.m_drivetrain.generateTrajectory(trajectorySECOND);
   third = RobotContainer.m_drivetrain.generateTrajectory(trajectoryTHIRD);
   fourth = RobotContainer.m_drivetrain.generateTrajectory(trajectoryFOURTH);
+
+  chooser.addOption("2 Ball Auto", new BasicAuto());
+  chooser.addOption("4 Ball Auto", new ComplexAuto(first, second, third, fourth));
+
+  // SmartDashboard.putData("2 Ball Auto", new BasicAuto());
+  // SmartDashboard.putData("4 Ball Auto", new ComplexAuto(first, second, third, fourth));
+
+  SmartDashboard.putData("Auto Chooser", chooser);
 
 
   }
@@ -115,10 +122,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     RobotContainer.m_SigmaSight.updateValues();
-    //RobotContainer.m_BallMechs.BallSensor.get();
     CommandScheduler.getInstance().run();
-    //RobotContainer.navX.updateAHRS();
-    //RobotContainer.navX.update();
+
     
   }
 
@@ -127,39 +132,25 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+
+    //SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-
-
-    // if (auto.equals("Basic")){
-
-    //   m_autonomousCommand = new BasicAuto();
-
-    // } else if (auto.equals("Complex")){
-
-    //   m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
-
-    // }
      
     RobotContainer.m_drivetrain.getRightEncoder().setPosition(0);
     RobotContainer.m_drivetrain.getLeftEncoder().setPosition(0);
 
     RobotContainer.m_drivetrain.resetOdometry(second.getInitialPose());
-    // RobotContainer.m_drivetrain.leftMaster.setIdleMode(IdleMode.kBrake);
-    // RobotContainer.m_drivetrain.leftSlave.setIdleMode(IdleMode.kBrake);
-    // RobotContainer.m_drivetrain.leftSlave2.setIdleMode(IdleMode.kBrake);
-    // RobotContainer.m_drivetrain.rightMaster.setIdleMode(IdleMode.kBrake);
-    // RobotContainer.m_drivetrain.rightSlave.setIdleMode(IdleMode.kBrake);
-    // RobotContainer.m_drivetrain.rightSlave2.setIdleMode(IdleMode.kBrake);
 
- m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
-// m_autonomousCommand = new ComplexAutoP2(third, fourth);
-   // m_autonomousCommand = RobotContainer.m_drivetrain.getAutonomousCommand(fourth);//new BasicAuto();
-   // RobotContainer.navX.resetAngle();
-   //m_autonomousCommand = new BasicAuto();
+ //m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
+    // m_autonomousCommand = new ComplexAutoP2(third, fourth);
+    // m_autonomousCommand = RobotContainer.m_drivetrain.getAutonomousCommand(fourth);//new BasicAuto();
+    m_autonomousCommand = chooser.getSelected();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
