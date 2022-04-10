@@ -47,7 +47,7 @@ public final class Constants {
     public static final int DRIVER_CONTROLLER_ROTATE_AXIS = 5;
 
     //Limelight Constants09
-    public static final double TURN_KP = -0.03;
+    public static final double TURN_KP = -0.02;
     public static final double MIN_AIM_COMMAND = 0.2;//0.2;
     public static final double DISTANCE_KP = -0.1; // was -0.1
 

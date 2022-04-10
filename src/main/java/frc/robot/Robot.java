@@ -36,6 +36,8 @@ import frc.robot.subsystems.BallMechs;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import javax.swing.plaf.basic.BasicTextUI;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -47,7 +49,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private SendableChooser<Command> chooser = new SendableChooser<>();
+  private SendableChooser<Command> chooser = new SendableChooser<Command>();
 
   public PneumaticHub hub = new PneumaticHub();
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
@@ -55,7 +57,7 @@ public class Robot extends TimedRobot {
   String trajectoryFIRST = "paths/firstd.wpilib.json";
   String trajectorySECOND = "paths/secondssss.wpilib.json";
   String trajectoryTHIRD = "paths/thirdooo.wpilib.json";
-  String trajectoryFOURTH = "paths/fourthd.wpilib.json";
+  String trajectoryFOURTH = "paths/fourthHAILMARY.wpilib.json"; //was fourthd
 
   Trajectory trajectory = new Trajectory();
   Trajectory first = new Trajectory();
@@ -74,13 +76,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    SmartDashboard.putString("Auto", "Basic");
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     //hub.enableCompressorDigital();
     hub.enableCompressorAnalog(90, 120); // This is where it was 120 PSI. was 105
     RobotContainer.m_drivetrain.gearShifter.set(Value.kReverse); //kReverse is low gear
+    RobotContainer.m_SigmaSight.limelightTable.getEntry("stream").setNumber(0);
+
+    chooser.setDefaultOption("2 Ball Auto", new BasicAuto());
+    chooser.addOption("4 Ball Auto", new ComplexAuto(first, second, third, fourth));
+
+    SmartDashboard.putData("Auto Chooser", chooser);
+
+
+
     
    try {
 
@@ -97,13 +108,11 @@ public class Robot extends TimedRobot {
   third = RobotContainer.m_drivetrain.generateTrajectory(trajectoryTHIRD);
   fourth = RobotContainer.m_drivetrain.generateTrajectory(trajectoryFOURTH);
 
-  chooser.addOption("2 Ball Auto", new BasicAuto());
-  chooser.addOption("4 Ball Auto", new ComplexAuto(first, second, third, fourth));
+
 
   // SmartDashboard.putData("2 Ball Auto", new BasicAuto());
   // SmartDashboard.putData("4 Ball Auto", new ComplexAuto(first, second, third, fourth));
 
-  SmartDashboard.putData("Auto Chooser", chooser);
 
 
   }
@@ -134,7 +143,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
 
-    //SmartDashboard.putString("Auto Command", chooser.getSelected().getName());
+    //System.out.println(SmartDashboard.getString("Auto Command", chooser.getSelected().getName()));
 
   }
 
@@ -147,10 +156,11 @@ public class Robot extends TimedRobot {
 
     RobotContainer.m_drivetrain.resetOdometry(second.getInitialPose());
 
- //m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
+  m_autonomousCommand = new ComplexAuto(first, second, third, fourth);
+   //m_autonomousCommand = new BasicAuto();
     // m_autonomousCommand = new ComplexAutoP2(third, fourth);
     // m_autonomousCommand = RobotContainer.m_drivetrain.getAutonomousCommand(fourth);//new BasicAuto();
-    m_autonomousCommand = chooser.getSelected();
+    //m_autonomousCommand = chooser.getSelected();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

@@ -11,16 +11,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class dumbShooter extends CommandBase {
+public class limelightShooter extends CommandBase {
   int counter = 0;
   int indexerCounter = 0;
   int shootAnyways = 0;
   int autoLimit;
+  double desiredSpeed;
   double RPM = 4100;
   //double hoodedRPM = 5000;
   //double error;
   /** Creates a new dumbShooter. */
-  public dumbShooter(int limit, double speed) {
+  public limelightShooter(int limit, double speed) {
     addRequirements(RobotContainer.m_BallMechs);
     autoLimit = limit;
     RPM = speed;
@@ -52,13 +53,13 @@ public class dumbShooter extends CommandBase {
 
     // if (RobotContainer.m_BallMechs.hoodie.get() == Value.kForward){
 
-    //   error = hoodedRPM;
+    //   error = hoodedRPM; 
     //   RobotContainer.m_BallMechs.rpmShooter(hoodedRPM);
 
     // } else {
 
-      RobotContainer.m_BallMechs.rpmShooter(RPM);
-   //   error = RPM; 
+      desiredSpeed = RobotContainer.m_SigmaSight.bestRPM; 
+      RobotContainer.m_BallMechs.rpmShooter(RobotContainer.m_SigmaSight.bestRPM);
 
   // }
 
@@ -84,15 +85,19 @@ public class dumbShooter extends CommandBase {
 
     }
 
-  if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) > 100){
+  if (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - desiredSpeed) > 100){
 
     shootAnyways++;
     //System.out.println("Incrementing Shoot Anyways " + shootAnyways);
     
   }
 
-  if (indexerCounter > 20 && (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - RPM) < 50)){
-    //Ball is there
+  System.out.println("Actual RPM:" + RobotContainer.m_BallMechs.shooterENC.getVelocity());
+  System.out.println("RPM: " + RPM);
+
+  if (indexerCounter > 20 && (Math.abs((RobotContainer.m_BallMechs.shooterENC.getVelocity() * -1) - desiredSpeed ) < 50)){
+    //Ball is there  
+    System.out.println("AT SPEED");
     if (!RobotContainer.m_BallMechs.sensorTop.get()){
       Timer.delay(0.1);
       RobotContainer.m_BallMechs.runHopper(0);

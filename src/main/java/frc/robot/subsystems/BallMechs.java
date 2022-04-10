@@ -91,7 +91,7 @@ public class BallMechs extends SubsystemBase{
         kP = 0.000060; //SmartDashboard.getNumber("P", 0.000060); //0.000000081036 * 2; // 0.000025000; //0.000000081036 * 2; //0.090966;
         kI = 0.00000045; //75; // SmartDashboard.getNumber("I", 0);  // 0.000000000000001;
         kD = 0;
-        kIz = 350; //600;
+        kIz = 400; //600;
         kFF = 0.000172; //SmartDashboard.getNumber("FF", 0.000172); //0.0044631 / 25.05; // new SimpleMotorFeedforward(0.1277, 0.1258, 0.0044631); // kS, kV, kA
         
         kMaxOutput = 1;

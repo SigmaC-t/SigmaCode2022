@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShooterSequence extends SequentialCommandGroup {
   /** Creates a new ShooterSequence. */
-  public ShooterSequence() {
+  public ShooterSequence(double RPM) {
     System.out.println("Doing Shooter Sequence");
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Focus(), new FocusShoot());
+    addCommands(new Focus(), new FocusShoot(RPM));
   }
 }

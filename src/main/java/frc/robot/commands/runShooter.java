@@ -46,16 +46,16 @@ public class runShooter extends CommandBase {
       //Create a function that waits for the shooter to get up to speed before moving the hopper and indexer.
     RobotContainer.m_BallMechs.shooter(-speed);
     RobotContainer.m_BallMechs.indexerMotor.set(-speed);
-
-     if (RobotContainer.m_BallMechs.shooterEncoderTwo.getVelocity() * -1 >= 4310){
-        counter++;
+    counter++;
 
         if (counter > 20){
+
         RobotContainer.m_BallMechs.hopperMotor.set(-0.7);
+
         }
 
        
-      }
+      
        
    
     

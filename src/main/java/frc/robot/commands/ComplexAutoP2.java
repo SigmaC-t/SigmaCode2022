@@ -17,7 +17,7 @@ import frc.robot.RobotContainer;
 public class ComplexAutoP2 extends SequentialCommandGroup {
   /** Creates a new ComplexAutoP2. */
   public ComplexAutoP2(Trajectory third, Trajectory fourth) {
-    // Add your commands in the addCommands() call, e.g.
-    addCommands(new InstantCommand(() -> { RobotContainer.m_drivetrain.resetOdometry(new Pose2d(7.621, 2.676, Rotation2d.fromDegrees(26)));}), new PathIntake(third, 2, 200),  new PathIntake(fourth, 0, 200) /*RobotContainer.m_drivetrain.getAutonomousCommand(fourth)*/, new DriveToRange("short"), new ShooterSequence());
+    // Add your commands in the addCommands() call, e.g.                            
+    addCommands(new InstantCommand(() -> { RobotContainer.m_drivetrain.resetOdometry(new Pose2d(7.621, 2.676, Rotation2d.fromDegrees(26)));}), new PathIntake(third, 2, 200),  new PathIntake(fourth, 0, 200), /* RobotContainer.m_drivetrain.getAutonomousCommand(fourth)*//*, new DriveToRange("short")*/ new runShooter(0.4)); //new ShooterSequenceDIST(5150)); //Attempting to shoot hig
   }
 }

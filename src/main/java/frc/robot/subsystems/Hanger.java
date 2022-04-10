@@ -127,8 +127,10 @@ public class Hanger extends SubsystemBase {
 
   public void ascendArms(double speed){
 
-      hangR.set(0.5);
+      hangR.set(-1);
       hangL.follow(hangR, true);
+      System.out.println(rENC.getPosition());
+      System.out.println(lENC.getPosition());
 
   }
 
@@ -163,23 +165,30 @@ public class Hanger extends SubsystemBase {
 
   public void descendHome (){
 
-    hangR.set(-0.2);
-    hangL.set(0.2);
+    hangR.set(0.2);
+    hangL.set(-0.2);
     rENC.setPosition(0);
 
+  }
+
+  public void descendUnbound(){
+    hangR.set(1);
+    hangL.follow(hangR, true);
+    
   }
 
   
 
   public void descendArms(double speed){
 
-    if (!magnet.get()){
+    if (rENC.getPosition() * -1 <= minPosition){
 
       hangR.set(0);
+      hangL.follow(hangR, true);
 
     } else {
 
-      hangR.set(-1);
+      hangR.set(1);
       hangL.follow(hangR, true);
 
     }

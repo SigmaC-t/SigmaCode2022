@@ -25,8 +25,10 @@ public class SigmaSight extends SubsystemBase {
   public double distanceKP = Constants.DISTANCE_KP;
   public double desiredArea;
   public double minAimCommand = Constants.MIN_AIM_COMMAND;
+  public double bestRPM;
+  public double yValOffset; // The corrected yVal for RPM equation.
 
-  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+ public NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   NetworkTableEntry tv = limelightTable.getEntry("tv");
   NetworkTableEntry tx = limelightTable.getEntry("tx");
   NetworkTableEntry ty = limelightTable.getEntry("ty");
@@ -37,17 +39,19 @@ public class SigmaSight extends SubsystemBase {
 
   //Updates value and reflect updated values in SmartDashboard
   public void updateValues(){
-    validTarget = isValidTarget();
+    //validTarget = isValidTarget();
     xVal = tx.getDouble(0.0);
     yVal = ty.getDouble(0.0);
-    area = ta.getDouble(0.0);
-    skew = ts.getDouble(0.0);
+    //area = ta.getDouble(0.0);
+    //skew = ts.getDouble(0.0);
+    bestRPM = optimalRPM();
 
-    SmartDashboard.putBoolean("tv", validTarget);
+  //SmartDashboard.putBoolean("tv", validTarget);
     SmartDashboard.putNumber("tx", xVal);
     SmartDashboard.putNumber("ty", yVal);
-    SmartDashboard.putNumber("ta", area);
-    SmartDashboard.putNumber("ts", skew);
+   // SmartDashboard.putNumber("ta", area);
+   // SmartDashboard.putNumber("ts", skew);
+    SmartDashboard.putNumber("Offseted yVal", yValOffset);
   }
 
 
@@ -83,30 +87,27 @@ public class SigmaSight extends SubsystemBase {
   }
   
   int hoodedDistance;
-  public int optimalRPM(){
+  public double optimalRPM(){
 
-    int optimalRPM = 4100;
-
-    if (Math.abs(yVal) > hoodedDistance) {/*Insert Distance that the hooded shooter starts to become effective)*/
-
-      RobotContainer.m_BallMechs.hoodieDown();
-
-    } else {
-
-      RobotContainer.m_BallMechs.hoodieUp();
-
-    }
-
-    if (Math.abs(yVal) > 2){
-
+    yValOffset = yVal - 12.5;
+    //double optimalRPM = -(4.0238 * Math.pow(yVal, 3)) - (297.22* Math.pow(yVal, 2)) - (7364.4*(yVal)) - 56402;
+    double optimalRPM = -127.03 * (yValOffset) + 1676.3 + 50;//Added 50 to see if ball paths are better.
+      //-4.0238x^3 - 297.22x^2 - 7364.4x - 56402
+      //y = -127.03x + 1676.3
       //Insert equation that calculates optimal RPM for distance here.
-      return optimalRPM;
 
-    } else {
+    if (optimalRPM < 4100) {   
 
       optimalRPM = 4100;
-      return optimalRPM;
+
+    } else if (optimalRPM > 5500){
+
+      optimalRPM = 5500;
     }
+      //System.out.println("Optimal RPM = " + optimalRPM);
+      bestRPM = optimalRPM; 
+      return optimalRPM;
+    
 
   }
 

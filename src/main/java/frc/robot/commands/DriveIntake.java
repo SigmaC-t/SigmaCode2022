@@ -14,6 +14,6 @@ public class DriveIntake extends ParallelCommandGroup {
   public DriveIntake(double speed) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Drivestraight(speed), new AutoIntake(1, 200));
+    addCommands(new Drivestraight(speed), new AutoIntake(1, 150));
   }
 }
